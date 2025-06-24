@@ -7,7 +7,7 @@
 **基于 Go 语言的现代化内容管理系统**
 
 [![Go Version](https://img.shields.io/badge/Go-1.23+-00ADD8?style=flat&logo=go)](https://golang.org)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat&logo=docker)](https://docker.com)
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen)](https://github.com/your-repo/aq3cms)
 
