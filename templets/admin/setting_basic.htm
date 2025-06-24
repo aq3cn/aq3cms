@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.PageTitle}} - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .form-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        .form-group textarea { height: 100px; resize: vertical; }
+        .form-group .help-text { font-size: 12px; color: #666; margin-top: 5px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .btn-group { text-align: center; margin-top: 30px; }
+        .btn { padding: 12px 30px; margin: 0 10px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; text-decoration: none; display: inline-block; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-secondary { background: #95a5a6; color: white; }
+        .btn-secondary:hover { background: #7f8c8d; }
+        .alert { padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏠 基本设置</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/aq3cms/setting">设置首页</a>
+            <a href="/">查看网站</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <a href="/aq3cms/setting">系统设置</a>
+            <span>></span>
+            <span>基本设置</span>
+        </div>
+
+        {{if .Message}}
+        <div class="alert alert-{{.MessageType}}">
+            {{.Message}}
+        </div>
+        {{end}}
+
+        <div class="form-container">
+            <form method="POST" action="/aq3cms/setting/basic">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="site_name">网站名称</label>
+                        <input type="text" id="site_name" name="site_name" value="{{.Config.Site.Name}}" required>
+                        <div class="help-text">网站的名称，将显示在浏览器标题栏和网站头部</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="site_url">网站地址</label>
+                        <input type="url" id="site_url" name="site_url" value="{{.Config.Site.URL}}" required>
+                        <div class="help-text">网站的完整URL地址，如：http://www.example.com</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="site_keywords">网站关键词</label>
+                    <input type="text" id="site_keywords" name="site_keywords" value="{{.Config.Site.Keywords}}">
+                    <div class="help-text">网站的关键词，多个关键词用英文逗号分隔，有利于SEO</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="site_description">网站描述</label>
+                    <textarea id="site_description" name="site_description">{{.Config.Site.Description}}</textarea>
+                    <div class="help-text">网站的描述信息，将显示在搜索引擎结果中</div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="site_icp">ICP备案号</label>
+                        <input type="text" id="site_icp" name="site_icp" value="{{.Config.Site.ICP}}">
+                        <div class="help-text">网站的ICP备案号，如：京ICP备12345678号</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="site_copyright">版权信息</label>
+                        <input type="text" id="site_copyright" name="site_copyright" value="{{.Config.Site.CopyRight}}">
+                        <div class="help-text">网站的版权信息，如：© 2024 公司名称</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="site_statcode">统计代码</label>
+                    <textarea id="site_statcode" name="site_statcode">{{.Config.Site.StatCode}}</textarea>
+                    <div class="help-text">网站统计代码，如百度统计、Google Analytics等</div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="default_template">默认模板</label>
+                        <select id="default_template" name="default_template">
+                            <option value="default" {{if eq .Config.Template.DefaultTpl "default"}}selected{{end}}>默认模板</option>
+                            <option value="mobile" {{if eq .Config.Template.DefaultTpl "mobile"}}selected{{end}}>手机模板</option>
+                        </select>
+                        <div class="help-text">网站使用的默认模板风格</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="timezone">时区设置</label>
+                        <select id="timezone" name="timezone">
+                            <option value="Asia/Shanghai" selected>北京时间 (UTC+8)</option>
+                            <option value="UTC">世界标准时间 (UTC)</option>
+                            <option value="America/New_York">纽约时间 (UTC-5)</option>
+                        </select>
+                        <div class="help-text">网站使用的时区设置</div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">保存设置</button>
+                    <a href="/aq3cms/setting" class="btn btn-secondary">返回</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

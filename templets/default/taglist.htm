@@ -1,0 +1,96 @@
+{aq3cms:include file='head.htm'/}
+
+<div class="container main-container">
+    <div class="row">
+        <!-- 主内容区 -->
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <!-- 面包屑导航 -->
+                    <ol class="breadcrumb">
+                        <li><a href="/">首页</a></li>
+                        <li class="active">标签云</li>
+                    </ol>
+                    
+                    <!-- 标签标题 -->
+                    <div class="tag-header">
+                        <h1 class="tag-title">标签云</h1>
+                        <p class="tag-description">这里列出了网站中的所有标签，点击标签可以查看相关文章。</p>
+                    </div>
+                    
+                    <!-- 标签列表 -->
+                    <div class="tag-list-box">
+                        <div class="tag-cloud tag-cloud-lg">
+                            {aq3cms:tag row=200 sort=rand}
+                            <a href="[field:link/]" class="tag-item" style="font-size: [field:highlight/]px;">[field:tag/]</a>
+                            {/aq3cms:tag}
+                        </div>
+                    </div>
+                    
+                    <!-- 热门标签 -->
+                    <div class="hot-tags-box">
+                        <h3>热门标签</h3>
+                        <div class="tag-cloud">
+                            {aq3cms:tag row=50 sort=hot}
+                            <a href="[field:link/]" class="tag-item tag-hot">[field:tag/]</a>
+                            {/aq3cms:tag}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 侧边栏 -->
+        <div class="col-md-4">
+            <!-- 最新标签 -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">最新标签</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="tag-cloud">
+                        {aq3cms:tag row=30 sort=new}
+                        <a href="[field:link/]" class="tag-item">[field:tag/]</a>
+                        {/aq3cms:tag}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 热门文章 -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">热门文章</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="article-list">
+                        {aq3cms:arclist typeid=0 row=10 orderby=click}
+                        <li>
+                            <span class="pull-right text-muted">[field:click/]</span>
+                            <a href="[field:arcurl/]">[field:title/]</a>
+                        </li>
+                        {/aq3cms:arclist}
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 最新文章 -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">最新文章</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="article-list">
+                        {aq3cms:arclist typeid=0 row=10 orderby=pubdate}
+                        <li>
+                            <span class="pull-right text-muted">[field:pubdate function="MyDate('m-d',@me)"/]</span>
+                            <a href="[field:arcurl/]">[field:title/]</a>
+                        </li>
+                        {/aq3cms:arclist}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{aq3cms:include file='footer.htm'/}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.PageTitle}} - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .setting-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .setting-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.2s; }
+        .setting-card:hover { transform: translateY(-2px); }
+        .setting-card .icon { font-size: 48px; text-align: center; margin-bottom: 15px; }
+        .setting-card .title { font-size: 20px; font-weight: bold; margin-bottom: 10px; text-align: center; color: #333; }
+        .setting-card .desc { color: #666; text-align: center; margin-bottom: 20px; line-height: 1.5; }
+        .setting-card .actions { text-align: center; }
+        .setting-card .btn { display: inline-block; padding: 10px 20px; background: #3498db; color: white; text-decoration: none; border-radius: 5px; transition: background 0.2s; }
+        .setting-card .btn:hover { background: #2980b9; }
+        .setting-card .btn.secondary { background: #95a5a6; }
+        .setting-card .btn.secondary:hover { background: #7f8c8d; }
+        .system-info { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-top: 20px; }
+        .system-info h3 { margin: 0 0 15px 0; color: #333; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .info-item { padding: 10px; background: #f8f9fa; border-radius: 5px; }
+        .info-label { font-weight: bold; color: #555; }
+        .info-value { color: #333; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚙️ 系统设置</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/">查看网站</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <span>系统设置</span>
+        </div>
+
+        <div class="setting-grid">
+            <div class="setting-card">
+                <div class="icon">🏠</div>
+                <div class="title">基本设置</div>
+                <div class="desc">配置网站基本信息，包括网站名称、关键词、描述等基础设置</div>
+                <div class="actions">
+                    <a href="/aq3cms/setting/basic" class="btn">进入设置</a>
+                </div>
+            </div>
+
+            <div class="setting-card">
+                <div class="icon">📁</div>
+                <div class="title">上传设置</div>
+                <div class="desc">配置文件上传相关设置，包括上传目录、文件大小限制、水印等</div>
+                <div class="actions">
+                    <a href="/aq3cms/setting/upload" class="btn">进入设置</a>
+                </div>
+            </div>
+
+            <div class="setting-card">
+                <div class="icon">⚡</div>
+                <div class="title">静态化设置</div>
+                <div class="desc">配置网站静态化功能，提高网站访问速度和SEO效果</div>
+                <div class="actions">
+                    <a href="/aq3cms/setting/static" class="btn">进入设置</a>
+                </div>
+            </div>
+
+            <div class="setting-card">
+                <div class="icon">🚀</div>
+                <div class="title">缓存设置</div>
+                <div class="desc">配置系统缓存策略，优化网站性能和响应速度</div>
+                <div class="actions">
+                    <a href="/aq3cms/setting/cache" class="btn">进入设置</a>
+                    <a href="/aq3cms/setting/clear_cache" class="btn secondary" onclick="return confirm('确定要清除所有缓存吗？')">清除缓存</a>
+                </div>
+            </div>
+
+            <div class="setting-card">
+                <div class="icon">🔧</div>
+                <div class="title">系统配置</div>
+                <div class="desc">查看和管理系统核心配置，包括数据库、日志等系统级设置</div>
+                <div class="actions">
+                    <a href="/aq3cms/system_config" class="btn">进入设置</a>
+                </div>
+            </div>
+
+            <div class="setting-card">
+                <div class="icon">🗄️</div>
+                <div class="title">数据库管理</div>
+                <div class="desc">数据库备份、恢复和优化等数据库相关操作</div>
+                <div class="actions">
+                    <a href="/aq3cms/system_database" class="btn">进入管理</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="system-info">
+            <h3>💻 当前系统信息</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">网站名称</div>
+                    <div class="info-value">{{.Config.Site.Name}}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">网站地址</div>
+                    <div class="info-value">{{.Config.Site.URL}}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">默认模板</div>
+                    <div class="info-value">{{.Config.Template.DefaultTpl}}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">缓存类型</div>
+                    <div class="info-value">{{.Config.Cache.Type}}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">数据库类型</div>
+                    <div class="info-value">{{.Config.Database.Type}}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">上传目录</div>
+                    <div class="info-value">{{.Config.Upload.Dir}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

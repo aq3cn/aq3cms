@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模板列表 - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .toolbar { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .toolbar h3 { margin: 0 0 15px 0; color: #2c3e50; }
+        .toolbar .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; transition: all 0.2s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-warning:hover { background: #e67e22; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-info:hover { background: #138496; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #5a6268; }
+        .file-list { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .file-list h3 { margin: 0; padding: 20px; border-bottom: 1px solid #eee; color: #2c3e50; }
+        .file-table { width: 100%; border-collapse: collapse; }
+        .file-table th, .file-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #f0f0f0; }
+        .file-table th { background: #f8f9fa; font-weight: bold; color: #2c3e50; }
+        .file-table tr:hover { background: #f8f9fa; }
+        .file-icon { width: 40px; height: 40px; border-radius: 8px; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 10px; flex-shrink: 0; }
+        .file-icon.dir { background: #34495e; }
+        .file-icon.html { background: #e74c3c; }
+        .file-icon.css { background: #9b59b6; }
+        .file-icon.js { background: #f39c12; }
+        .file-icon.image { background: #27ae60; }
+        .file-icon.other { background: #95a5a6; }
+        .file-info { display: flex; align-items: center; }
+        .file-name { font-weight: bold; color: #2c3e50; }
+        .file-size { color: #666; font-size: 14px; }
+        .file-actions { display: flex; gap: 5px; }
+        .empty-state { padding: 40px 20px; text-align: center; color: #666; }
+        .empty-state .icon { font-size: 64px; margin-bottom: 15px; opacity: 0.5; }
+        .current-path { background: #e3f2fd; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; }
+        .current-path h4 { margin: 0 0 10px 0; color: #2c3e50; }
+        .current-path .path { font-family: monospace; background: white; padding: 8px 12px; border-radius: 4px; border: 1px solid #ddd; }
+        @media (max-width: 768px) {
+            .toolbar .actions { flex-direction: column; }
+            .file-table { font-size: 14px; }
+            .file-table th, .file-table td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📁 模板列表</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/">查看网站</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <a href="/aq3cms/template">模板管理</a>
+            <span>></span>
+            <span>模板列表</span>
+        </div>
+
+        <div class="current-path">
+            <h4>📂 当前路径</h4>
+            <div class="path">{{.CurrentDir}}</div>
+        </div>
+
+        <div class="toolbar">
+            <h3>🛠️ 操作工具</h3>
+            <div class="actions">
+                <a href="/aq3cms/template_create?dir={{.CurrentDir}}" class="btn btn-success">📄 新建文件</a>
+                <a href="/aq3cms/template_create?dir={{.CurrentDir}}&type=directory" class="btn btn-info">📁 新建目录</a>
+                <a href="/aq3cms/template" class="btn btn-secondary">🏠 返回首页</a>
+                {{if ne .CurrentDir .TemplateDir}}
+                <a href="/aq3cms/template_list?dir={{.TemplateDir}}" class="btn btn-warning">📁 根目录</a>
+                {{end}}
+            </div>
+        </div>
+
+        <div class="file-list">
+            <h3>📋 文件列表</h3>
+            {{if .Files}}
+            <table class="file-table">
+                <thead>
+                    <tr>
+                        <th width="50%">文件名</th>
+                        <th width="15%">类型</th>
+                        <th width="15%">大小</th>
+                        <th width="20%">修改时间</th>
+                        <th width="150px">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{if ne .CurrentDir .TemplateDir}}
+                    <tr>
+                        <td>
+                            <div class="file-info">
+                                <div class="file-icon dir">📁</div>
+                                <div>
+                                    <div class="file-name">
+                                        <a href="/aq3cms/template_list?dir={{.CurrentDir}}/.." style="color: #3498db; text-decoration: none;">.. (上级目录)</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>目录</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    {{end}}
+                    {{range .Files}}
+                    <tr>
+                        <td>
+                            <div class="file-info">
+                                <div class="file-icon {{if .IsDir}}dir{{else if contains .Name ".htm"}}html{{else if contains .Name ".css"}}css{{else if contains .Name ".js"}}js{{else if or (contains .Name ".jpg") (contains .Name ".png") (contains .Name ".gif")}}image{{else}}other{{end}}">
+                                    {{if .IsDir}}📁{{else if contains .Name ".htm"}}H{{else if contains .Name ".css"}}C{{else if contains .Name ".js"}}J{{else if or (contains .Name ".jpg") (contains .Name ".png") (contains .Name ".gif")}}🖼️{{else}}📄{{end}}
+                                </div>
+                                <div>
+                                    <div class="file-name">
+                                        {{if .IsDir}}
+                                            <a href="/aq3cms/template_list?dir={{.Path}}" style="color: #3498db; text-decoration: none;">{{.Name}}</a>
+                                        {{else}}
+                                            {{.Name}}
+                                        {{end}}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{if .IsDir}}目录{{else}}文件{{end}}</td>
+                        <td>{{if .IsDir}}-{{else}}{{.Size}} 字节{{end}}</td>
+                        <td>{{.ModTime.Format "2006-01-02 15:04"}}</td>
+                        <td>
+                            <div class="file-actions">
+                                {{if .IsDir}}
+                                    <a href="/aq3cms/template_list?dir={{.Path}}" class="btn btn-info" style="padding: 5px 10px; font-size: 12px;">打开</a>
+                                    <a href="/aq3cms/template_delete/{{.Path}}" class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" onclick="return confirm('确定要删除目录 {{.Name}} 吗？')">删除</a>
+                                {{else}}
+                                    <a href="/aq3cms/template_edit?file={{.Path}}" class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;">编辑</a>
+                                    <a href="/aq3cms/template_delete/{{.Path}}" class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" onclick="return confirm('确定要删除文件 {{.Name}} 吗？')">删除</a>
+                                {{end}}
+                            </div>
+                        </td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+            {{else}}
+            <div class="empty-state">
+                <div class="icon">📁</div>
+                <div>此目录为空</div>
+                <div style="margin-top: 15px;">
+                    <a href="/aq3cms/template_create?dir={{.CurrentDir}}" class="btn btn-success">创建第一个文件</a>
+                </div>
+            </div>
+            {{end}}
+        </div>
+    </div>
+</body>
+</html>

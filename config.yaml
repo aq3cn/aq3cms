@@ -1,0 +1,98 @@
+server:
+  host: 0.0.0.0
+  port: 8080
+  readTimeout: 60
+  writeTimeout: 60
+  maxHeaderBytes: 1048576
+  jwtSecret: your-jwt-secret-key
+  sessionSecret: your-session-secret-key
+  secure: false
+  enableRateLimit: false
+  rateLimitRequests: 0
+  rateLimitWindow: 0
+database:
+  type: mysql
+  host: mysql
+  port: 3306
+  username: aq3cms
+  password: aq3cms123
+  database: aq3cms
+  prefix: aq3cms_
+  charset: utf8mb4
+  maxIdle: 10
+  maxOpen: 100
+template:
+  dir: templets
+  cache: true
+  defaultTpl: default
+upload:
+  dir: uploads
+  maxSize: 10
+  allowedExts: .jpg,.jpeg,.png,.gif,.webp
+  denyExts: ""
+  watermark: false
+  watermarkImg: ""
+  watermarkPos: bottom-right
+  watermarkText: ""
+  watermarkColor: ""
+  watermarkAlpha: 0.5
+  imageMaxWidth: 0
+  imageMaxHeight: 0
+log:
+  path: logs
+  level: info
+cache:
+  type: memory
+  path: runtime/cache
+  host: redis
+  port: 0
+  password: ""
+  expire: 0
+  enableArticleCache: false
+  articleCacheTime: 3600
+  enableListCache: false
+  listCacheTime: 3600
+  enableTagCache: true
+  tagCacheTime: 3600
+  enableSpecialCache: true
+  specialCacheTime: 3600
+  enableSearchCache: false
+  searchCacheTime: 0
+  enableStatsCache: true
+  statsCacheTime: 3600
+  enableSitemapCache: true
+  sitemapCacheTime: 86400
+  enableRSSCache: true
+  rssCacheTime: 86400
+site:
+  name: aq3CMS测试1
+  url: http://localhost:8080
+  keywords: aq3CMS测试1,测试,Go
+  description: aq3CMS测试123
+  email: admin@example.com
+  icp: 测试备案号
+  statCode: 测试统计代码
+  copyRight: 测试版权信息
+  defaultLang: zh-cn
+  staticIndex: true
+  staticList: true
+  staticArticle: true
+  staticSpecial: false
+  staticTag: false
+  staticMobile: false
+  staticDir: html
+  staticSuffix: ""
+  staticMobileDir: ""
+  staticMobileSuffix: ""
+  close: false
+  closeReason: ""
+  commentAutoCheck: false
+  sessionSecret: ""
+api:
+  enabled: true
+  key: your-api-key
+  secret: your-api-secret
+  cors: true
+plugin:
+  dir: plugins
+  configFile: config/plugins.json

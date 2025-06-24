@@ -1,0 +1,305 @@
+/* 全局样式 */
+body {
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+a {
+    color: #337ab7;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #23527c;
+    text-decoration: underline;
+}
+
+/* 头部样式 */
+header {
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    max-height: 50px;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.search {
+    display: flex;
+}
+
+.search input {
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    border-radius: 4px 0 0 4px;
+    width: 200px;
+}
+
+.search button {
+    background-color: #337ab7;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+/* 主要内容区域 */
+.main {
+    width: 70%;
+    float: left;
+}
+
+.sidebar {
+    width: 28%;
+    float: right;
+}
+
+/* 焦点图 */
+.focus {
+    margin-bottom: 20px;
+}
+
+.slider {
+    position: relative;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.slide {
+    position: relative;
+}
+
+.slide img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.slide .title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 10px;
+}
+
+/* 最新文章 */
+.latest {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.latest h2 {
+    border-bottom: 2px solid #337ab7;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+.latest ul {
+    list-style: none;
+    padding: 0;
+}
+
+.latest li {
+    padding: 10px 0;
+    border-bottom: 1px dashed #eee;
+    display: flex;
+    justify-content: space-between;
+}
+
+.latest .date {
+    color: #999;
+    font-size: 14px;
+}
+
+/* 推荐阅读 */
+.recommend {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.recommend h2 {
+    border-bottom: 2px solid #337ab7;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+.recommend ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.recommend li {
+    width: 48%;
+    margin-bottom: 15px;
+}
+
+.recommend img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.recommend .title {
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+/* 侧边栏 */
+.sidebar > div {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar h2 {
+    border-bottom: 2px solid #337ab7;
+    padding-bottom: 10px;
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.hot ul {
+    list-style: none;
+    padding: 0;
+}
+
+.hot li {
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee;
+    display: flex;
+    justify-content: space-between;
+}
+
+.hot .views {
+    color: #999;
+    font-size: 14px;
+}
+
+.tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tag-cloud a {
+    display: inline-block;
+    margin: 5px;
+    padding: 5px 10px;
+    background-color: #f5f5f5;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.tag-1 { font-size: 12px; }
+.tag-2 { font-size: 14px; }
+.tag-3 { font-size: 16px; }
+.tag-4 { font-size: 18px; }
+.tag-5 { font-size: 20px; }
+
+.links ul {
+    list-style: none;
+    padding: 0;
+}
+
+.links li {
+    padding: 5px 0;
+}
+
+/* 页脚 */
+footer {
+    clear: both;
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    margin-top: 20px;
+}
+
+footer p {
+    margin: 5px 0;
+}
+
+/* 清除浮动 */
+.container:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .container {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .main, .sidebar {
+        width: 100%;
+        float: none;
+    }
+    
+    .recommend li {
+        width: 100%;
+    }
+    
+    nav ul {
+        flex-direction: column;
+    }
+    
+    nav ul li {
+        margin: 5px 0;
+    }
+    
+    .search input {
+        width: 150px;
+    }
+}

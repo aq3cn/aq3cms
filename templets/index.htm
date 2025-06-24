@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{aq3cms:global.cfg_webname/}</title>
+    <meta name="keywords" content="{aq3cms:global.cfg_keywords/}">
+    <meta name="description" content="{aq3cms:global.cfg_description/}">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="/"><img src="{aq3cms:global.cfg_web_logo/}" alt="{aq3cms:global.cfg_webname/}"></a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">首页</a></li>
+                    {aq3cms:channel type='top' row='10'}
+                    <li><a href="[field:typeurl/]">[field:typename/]</a></li>
+                    {/aq3cms:channel}
+                </ul>
+            </nav>
+            <div class="search">
+                <form action="/plus/search.php" method="get">
+                    <input type="text" name="q" placeholder="搜索...">
+                    <button type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main">
+            <div class="focus">
+                <!-- 焦点图 -->
+                <div class="slider">
+                    {aq3cms:arclist flag='f' row='5' orderby='pubdate' orderway='desc'}
+                    <div class="slide">
+                        <a href="[field:arcurl/]">
+                            <img src="[field:litpic/]" alt="[field:title/]">
+                            <div class="title">[field:title/]</div>
+                        </a>
+                    </div>
+                    {/aq3cms:arclist}
+                </div>
+            </div>
+
+            <div class="latest">
+                <h2>最新文章</h2>
+                <ul>
+                    {aq3cms:arclist row='10' orderby='pubdate' orderway='desc'}
+                    <li>
+                        <a href="[field:arcurl/]">[field:title/]</a>
+                        <span class="date">[field:pubdate function="date('Y-m-d',@me)"/]</span>
+                    </li>
+                    {/aq3cms:arclist}
+                </ul>
+            </div>
+
+            <div class="recommend">
+                <h2>推荐阅读</h2>
+                <ul>
+                    {aq3cms:arclist flag='c' row='5' orderby='pubdate' orderway='desc'}
+                    <li>
+                        <a href="[field:arcurl/]">
+                            <img src="[field:litpic/]" alt="[field:title/]">
+                            <div class="title">[field:title/]</div>
+                        </a>
+                    </li>
+                    {/aq3cms:arclist}
+                </ul>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="hot">
+                <h2>热门文章</h2>
+                <ul>
+                    {aq3cms:arclist row='10' orderby='click' orderway='desc'}
+                    <li>
+                        <a href="[field:arcurl/]">[field:title/]</a>
+                        <span class="views">[field:click/]</span>
+                    </li>
+                    {/aq3cms:arclist}
+                </ul>
+            </div>
+
+            <div class="tags">
+                <h2>标签云</h2>
+                <div class="tag-cloud">
+                    {aq3cms:tag row='20' orderby='rand'}
+                    <a href="[field:tagurl/]" class="tag-[field:id function="rand(1, 5)"/]">[field:tag/]</a>
+                    {/aq3cms:tag}
+                </div>
+            </div>
+
+            <div class="links">
+                <h2>友情链接</h2>
+                <ul>
+                    {aq3cms:flink row='10'}
+                    <li><a href="[field:url/]" target="_blank">[field:webname/]</a></li>
+                    {/aq3cms:flink}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>{aq3cms:global.cfg_copyright/}</p>
+            <p>Powered by aq3cms</p>
+        </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.PageTitle}} - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 800px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .form-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .form-container h2 { margin: 0 0 25px 0; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #2c3e50; }
+        .form-group .required { color: #e74c3c; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; box-sizing: border-box; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #3498db; box-shadow: 0 0 5px rgba(52, 152, 219, 0.3); }
+        .form-group textarea { height: 80px; resize: vertical; }
+        .form-group .help-text { font-size: 12px; color: #666; margin-top: 5px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; }
+        .checkbox-group input[type="checkbox"] { width: auto; margin: 0; }
+        .form-actions { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; display: flex; gap: 15px; justify-content: flex-end; }
+        .btn { padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; transition: all 0.2s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-secondary { background: #95a5a6; color: white; }
+        .btn-secondary:hover { background: #7f8c8d; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .form-section { margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 5px; border-left: 4px solid #3498db; }
+        .form-section h3 { margin: 0 0 15px 0; color: #2c3e50; font-size: 16px; }
+        .info-box { background: #e8f4fd; border: 1px solid #bee5eb; border-radius: 5px; padding: 15px; margin-bottom: 20px; }
+        .info-box .info-title { font-weight: bold; color: #0c5460; margin-bottom: 5px; }
+        .info-box .info-content { color: #0c5460; font-size: 14px; }
+        @media (max-width: 768px) {
+            .form-row { grid-template-columns: 1fr; }
+            .form-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>✏️ 编辑栏目</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/aq3cms/category">栏目管理</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <a href="/aq3cms/category">栏目管理</a>
+            <span>></span>
+            <a href="/aq3cms/category_list">栏目列表</a>
+            <span>></span>
+            <span>编辑栏目</span>
+        </div>
+
+        <div class="info-box">
+            <div class="info-title">📋 栏目信息</div>
+            <div class="info-content">
+                正在编辑栏目：<strong>{{.Category.TypeName}}</strong> (ID: {{.Category.ID}})
+                <br>创建时间：{{.Category.CreateTime.Format "2006-01-02 15:04:05"}}
+                <br>最后更新：{{.Category.UpdateTime.Format "2006-01-02 15:04:05"}}
+            </div>
+        </div>
+
+        <div class="form-container">
+            <h2>📝 编辑栏目信息</h2>
+            
+            <form action="/aq3cms/category_edit/{{.Category.ID}}" method="POST">
+                <input type="hidden" name="id" value="{{.Category.ID}}">
+                
+                <div class="form-section">
+                    <h3>🏷️ 基本信息</h3>
+                    
+                    <div class="form-group">
+                        <label for="typename">栏目名称 <span class="required">*</span></label>
+                        <input type="text" id="typename" name="typename" value="{{.Category.TypeName}}" required placeholder="请输入栏目名称">
+                        <div class="help-text">栏目的显示名称，将在网站前台显示</div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reid">上级栏目</label>
+                            <select id="reid" name="reid">
+                                <option value="0" {{if eq .Category.ParentID 0}}selected{{end}}>顶级栏目</option>
+                                {{range .Categories}}
+                                {{if ne .ID $.Category.ID}}
+                                <option value="{{.ID}}" {{if eq .ID $.Category.ParentID}}selected{{end}}>{{.TypeName}}</option>
+                                {{end}}
+                                {{end}}
+                            </select>
+                            <div class="help-text">选择此栏目的上级栏目</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="typedir">栏目目录 <span class="required">*</span></label>
+                            <input type="text" id="typedir" name="typedir" value="{{.Category.TypeDir}}" required placeholder="例如: news">
+                            <div class="help-text">栏目的URL目录名，只能包含字母、数字、下划线</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="channeltype">栏目类型</label>
+                            <select id="channeltype" name="channeltype">
+                                <option value="1" {{if eq .Category.ChannelType 1}}selected{{end}}>文章栏目</option>
+                                <option value="0" {{if eq .Category.ChannelType 0}}selected{{end}}>单页栏目</option>
+                            </select>
+                            <div class="help-text">文章栏目可以发布多篇文章，单页栏目只有一个页面</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sortrank">排序权重</label>
+                            <input type="number" id="sortrank" name="sortrank" value="{{.Category.SortRank}}" min="0" max="999">
+                            <div class="help-text">数字越小排序越靠前</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="ishtml" name="ishtml" value="1" {{if eq .Category.IsHidden 1}}checked{{end}}>
+                            <label for="ishtml">隐藏栏目</label>
+                        </div>
+                        <div class="help-text">隐藏的栏目不会在前台导航中显示</div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>🔍 SEO设置</h3>
+                    
+                    <div class="form-group">
+                        <label for="keywords">关键词</label>
+                        <input type="text" id="keywords" name="keywords" value="{{.Category.Keywords}}" placeholder="请输入关键词，多个关键词用逗号分隔">
+                        <div class="help-text">用于SEO优化的关键词</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">栏目描述</label>
+                        <textarea id="description" name="description" placeholder="请输入栏目描述">{{.Category.Description}}</textarea>
+                        <div class="help-text">栏目的详细描述，用于SEO优化</div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>🎨 模板设置</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="list_template">列表页模板</label>
+                            <select id="list_template" name="list_template">
+                                <option value="">使用默认模板</option>
+                                {{range .Templates}}
+                                <option value="{{.}}" {{if eq . $.Category.ListTpl}}selected{{end}}>{{.}}</option>
+                                {{end}}
+                            </select>
+                            <div class="help-text">栏目列表页使用的模板文件</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="article_template">文章页模板</label>
+                            <select id="article_template" name="article_template">
+                                <option value="">使用默认模板</option>
+                                {{range .Templates}}
+                                <option value="{{.}}" {{if eq . $.Category.ArticleTpl}}selected{{end}}>{{.}}</option>
+                                {{end}}
+                            </select>
+                            <div class="help-text">文章详情页使用的模板文件</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/aq3cms/category_list" class="btn btn-secondary">取消</a>
+                    <a href="/list/{{.Category.ID}}.html" target="_blank" class="btn btn-primary">🔍 预览</a>
+                    <button type="submit" class="btn btn-success">💾 保存修改</button>
+                    <a href="/aq3cms/category_delete/{{.Category.ID}}" class="btn btn-danger" onclick="return confirm('确定要删除这个栏目吗？删除后无法恢复！')">🗑️ 删除栏目</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 表单验证
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const typename = document.getElementById('typename').value.trim();
+            const typedir = document.getElementById('typedir').value.trim();
+            
+            if (!typename) {
+                alert('请输入栏目名称');
+                e.preventDefault();
+                return;
+            }
+            
+            if (!typedir) {
+                alert('请输入栏目目录');
+                e.preventDefault();
+                return;
+            }
+            
+            if (!/^[a-zA-Z0-9_]+$/.test(typedir)) {
+                alert('栏目目录只能包含字母、数字和下划线');
+                e.preventDefault();
+                return;
+            }
+        });
+    </script>
+</body>
+</html>

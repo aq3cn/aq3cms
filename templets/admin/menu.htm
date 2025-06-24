@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>菜单 - aq3cms管理系统</title>
+    <link rel="stylesheet" href="/static/admin/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/admin/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/admin/css/adminlte.min.css">
+    <link rel="stylesheet" href="/static/admin/css/custom.css">
+    <script src="/static/admin/js/jquery.min.js"></script>
+    <script src="/static/admin/js/bootstrap.min.js"></script>
+    <script src="/static/admin/js/adminlte.min.js"></script>
+    <style>
+        body {
+            background-color: #343a40;
+            color: #fff;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar {
+            padding: 0;
+        }
+        .nav-sidebar .nav-item {
+            margin-bottom: 0;
+        }
+        .nav-sidebar .nav-link {
+            color: #c2c7d0;
+            padding: 0.5rem 1rem;
+        }
+        .nav-sidebar .nav-link:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .nav-sidebar .nav-link.active {
+            color: #fff;
+            background-color: #007bff;
+        }
+        .nav-sidebar .nav-treeview {
+            margin-left: 1rem;
+        }
+        .nav-sidebar .nav-treeview .nav-link {
+            padding-left: 1.5rem;
+        }
+        .nav-header {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-header">内容管理</li>
+                <li class="nav-item">
+                    <a href="/aq3cms/article_list" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-file-text"></i>
+                        <p>文章管理</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/category_list" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-folder"></i>
+                        <p>栏目管理</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/comment_list" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-comments"></i>
+                        <p>评论管理</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/tag_list" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-tags"></i>
+                        <p>标签管理</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/special_list" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-star"></i>
+                        <p>专题管理</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/vote_list" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-bar-chart"></i>
+                        <p>投票管理</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/ad_list" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-bullhorn"></i>
+                        <p>广告管理</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/ad_position_list" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-map-marker"></i>
+                        <p>广告位管理</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/link_list" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-link"></i>
+                        <p>友情链接</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/collect_rule_list" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-download"></i>
+                        <p>采集管理</p>
+                    </a>
+                </li>
+
+                <li class="nav-header">用户管理</li>
+                <li class="nav-item">
+                    <a href="/aq3cms/member_list" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-users"></i>
+                        <p>会员管理</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/admin_list" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-user-secret"></i>
+                        <p>管理员管理</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/group_list" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-user-circle"></i>
+                        <p>会员组管理</p>
+                    </a>
+                </li>
+
+                <li class="nav-header">系统设置</li>
+                <li class="nav-item">
+                    <a href="/aq3cms/system_config" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-cog"></i>
+                        <p>系统配置</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/setting/basic" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-wrench"></i>
+                        <p>网站设置</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/setting/upload" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-upload"></i>
+                        <p>上传设置</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/setting/static" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-file"></i>
+                        <p>静态页面设置</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/setting/cache" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-database"></i>
+                        <p>缓存设置</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/system_database" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-database"></i>
+                        <p>数据库管理</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/system_cache" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-refresh"></i>
+                        <p>缓存管理</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/system_log" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-file-text-o"></i>
+                        <p>日志管理</p>
+                    </a>
+                </li>
+
+                <li class="nav-header">高级功能</li>
+                <li class="nav-item">
+                    <a href="/aq3cms/template_list" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-code"></i>
+                        <p>模板管理</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/html_index" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-html5"></i>
+                        <p>静态页面生成</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/i18n_list" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-language"></i>
+                        <p>多语言管理</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/stats_index" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-line-chart"></i>
+                        <p>统计管理</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/model_list" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-cubes"></i>
+                        <p>内容模型管理</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/aq3cms/plugin_list" class="nav-link" target="main">
+                        <i class="nav-icon fa fa-plug"></i>
+                        <p>插件管理</p>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+        $(function() {
+            // 设置当前菜单高亮
+            var currentUrl = window.parent.frames['main'].location.pathname;
+            $('.nav-link').each(function() {
+                var href = $(this).attr('href');
+                if (currentUrl.indexOf(href) === 0) {
+                    $(this).addClass('active');
+                    $(this).parents('.nav-item').addClass('menu-open');
+                    $(this).parents('.nav-treeview').css('display', 'block');
+                }
+            });
+
+            // 点击菜单项
+            $('.nav-link').click(function() {
+                $('.nav-link').removeClass('active');
+                $(this).addClass('active');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑模板 - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .file-info { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .file-info h3 { margin: 0 0 15px 0; color: #2c3e50; }
+        .file-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .meta-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+        .meta-label { font-weight: bold; color: #2c3e50; }
+        .meta-value { color: #666; }
+        .editor-container { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .editor-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .editor-header h3 { margin: 0; color: #2c3e50; }
+        .editor-actions { display: flex; gap: 10px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; transition: all 0.2s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-warning:hover { background: #e67e22; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-info:hover { background: #138496; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #5a6268; }
+        .editor-content { padding: 0; }
+        .code-editor { width: 100%; min-height: 600px; border: none; font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.5; padding: 20px; resize: vertical; outline: none; }
+        .editor-footer { padding: 20px; border-top: 1px solid #eee; background: #f8f9fa; display: flex; justify-content: space-between; align-items: center; }
+        .editor-status { color: #666; font-size: 14px; }
+        .save-actions { display: flex; gap: 10px; }
+        .message { padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; }
+        .message.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .message.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .message.info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .shortcuts { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .shortcuts h4 { margin: 0 0 15px 0; color: #2c3e50; }
+        .shortcut-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; }
+        .shortcut-item { display: flex; justify-content: space-between; padding: 5px 0; font-size: 14px; }
+        .shortcut-key { font-family: monospace; background: #f8f9fa; padding: 2px 6px; border-radius: 3px; }
+        @media (max-width: 768px) {
+            .editor-header { flex-direction: column; gap: 15px; align-items: stretch; }
+            .editor-actions { justify-content: center; }
+            .editor-footer { flex-direction: column; gap: 15px; align-items: stretch; }
+            .save-actions { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>✏️ 编辑模板</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/">查看网站</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <a href="/aq3cms/template">模板管理</a>
+            <span>></span>
+            <a href="/aq3cms/template_list">模板列表</a>
+            <span>></span>
+            <span>编辑模板</span>
+        </div>
+
+        <div class="file-info">
+            <h3>📄 文件信息</h3>
+            <div class="file-meta">
+                <div class="meta-item">
+                    <span class="meta-label">文件名:</span>
+                    <span class="meta-value">{{.FileName}}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">文件路径:</span>
+                    <span class="meta-value">{{.FilePath}}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">文件大小:</span>
+                    <span class="meta-value">{{.FileSize}} 字节</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">修改时间:</span>
+                    <span class="meta-value">{{.FileModTime.Format "2006-01-02 15:04:05"}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="shortcuts">
+            <h4>⌨️ 快捷键</h4>
+            <div class="shortcut-list">
+                <div class="shortcut-item">
+                    <span>保存文件</span>
+                    <span class="shortcut-key">Ctrl + S</span>
+                </div>
+                <div class="shortcut-item">
+                    <span>查找</span>
+                    <span class="shortcut-key">Ctrl + F</span>
+                </div>
+                <div class="shortcut-item">
+                    <span>替换</span>
+                    <span class="shortcut-key">Ctrl + H</span>
+                </div>
+                <div class="shortcut-item">
+                    <span>全选</span>
+                    <span class="shortcut-key">Ctrl + A</span>
+                </div>
+            </div>
+        </div>
+
+        <form id="editForm" method="POST" action="/aq3cms/template_edit">
+            <input type="hidden" name="file_path" value="{{.FilePath}}">
+            
+            <div class="editor-container">
+                <div class="editor-header">
+                    <h3>📝 编辑内容</h3>
+                    <div class="editor-actions">
+                        <button type="button" class="btn btn-info" onclick="formatCode()">🎨 格式化</button>
+                        <button type="button" class="btn btn-warning" onclick="insertTemplate()">📋 插入模板</button>
+                    </div>
+                </div>
+                
+                <div class="editor-content">
+                    <textarea name="content" class="code-editor" placeholder="请输入模板内容...">{{.FileContent}}</textarea>
+                </div>
+                
+                <div class="editor-footer">
+                    <div class="editor-status">
+                        <span id="lineCount">行数: 1</span> | 
+                        <span id="charCount">字符: 0</span> | 
+                        <span id="fileSize">大小: {{.FileSize}} 字节</span>
+                    </div>
+                    <div class="save-actions">
+                        <a href="/aq3cms/template_list" class="btn btn-secondary">❌ 取消</a>
+                        <button type="submit" class="btn btn-success">💾 保存文件</button>
+                        <button type="button" class="btn btn-primary" onclick="saveAndPreview()">👁️ 保存并预览</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const textarea = document.querySelector('.code-editor');
+        const lineCountSpan = document.getElementById('lineCount');
+        const charCountSpan = document.getElementById('charCount');
+
+        // 更新统计信息
+        function updateStats() {
+            const content = textarea.value;
+            const lines = content.split('\n').length;
+            const chars = content.length;
+            
+            lineCountSpan.textContent = `行数: ${lines}`;
+            charCountSpan.textContent = `字符: ${chars}`;
+        }
+
+        // 监听文本变化
+        textarea.addEventListener('input', updateStats);
+        textarea.addEventListener('keyup', updateStats);
+
+        // 初始化统计
+        updateStats();
+
+        // 快捷键支持
+        textarea.addEventListener('keydown', function(e) {
+            // Ctrl + S 保存
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                document.getElementById('editForm').submit();
+            }
+            
+            // Tab 键插入4个空格
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                const value = this.value;
+                
+                this.value = value.substring(0, start) + '    ' + value.substring(end);
+                this.selectionStart = this.selectionEnd = start + 4;
+            }
+        });
+
+        // 格式化代码
+        function formatCode() {
+            // 简单的HTML格式化
+            let content = textarea.value;
+            
+            // 移除多余的空白
+            content = content.replace(/>\s+</g, '><');
+            
+            // 添加缩进
+            let formatted = '';
+            let indent = 0;
+            const lines = content.split('<');
+            
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i];
+                if (i > 0) line = '<' + line;
+                
+                if (line.includes('</')) {
+                    indent = Math.max(0, indent - 1);
+                }
+                
+                if (line.trim()) {
+                    formatted += '    '.repeat(indent) + line.trim() + '\n';
+                }
+                
+                if (line.includes('<') && !line.includes('</') && !line.includes('/>')) {
+                    indent++;
+                }
+            }
+            
+            textarea.value = formatted;
+            updateStats();
+        }
+
+        // 插入模板
+        function insertTemplate() {
+            const templates = {
+                'HTML基础': '<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n    <meta charset="UTF-8">\n    <title>{{.Title}}</title>\n</head>\n<body>\n    \n</body>\n</html>',
+                'aq3cmsCMS标签': '{aq3cms:arclist typeid="1" limit="10"}\n    <a href="{{.url}}">{{.title}}</a>\n{/aq3cms:arclist}',
+                '条件判断': '{{if .Condition}}\n    <!-- 条件为真时显示 -->\n{{else}}\n    <!-- 条件为假时显示 -->\n{{end}}',
+                '循环遍历': '{{range .Items}}\n    <div>{{.}}</div>\n{{end}}'
+            };
+            
+            const templateName = prompt('选择要插入的模板:\n' + Object.keys(templates).map((k, i) => `${i+1}. ${k}`).join('\n'));
+            
+            if (templateName && templates[templateName]) {
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const value = textarea.value;
+                
+                textarea.value = value.substring(0, start) + templates[templateName] + value.substring(end);
+                textarea.focus();
+                updateStats();
+            }
+        }
+
+        // 保存并预览
+        function saveAndPreview() {
+            // 先保存文件
+            const formData = new FormData(document.getElementById('editForm'));
+            
+            fetch('/aq3cms/template_edit', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('文件保存成功！');
+                    // 这里可以添加预览逻辑
+                } else {
+                    alert('保存失败: ' + (data.message || '未知错误'));
+                }
+            })
+            .catch(error => {
+                alert('保存失败: ' + error.message);
+            });
+        }
+
+        // 表单提交处理
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            if (!confirm('确定要保存文件吗？')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

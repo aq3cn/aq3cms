@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aq3cms管理系统</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .frameset {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .top-frame {
+            height: 50px;
+            border: none;
+            width: 100%;
+        }
+        .content-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        .menu-frame {
+            width: 220px;
+            border: none;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .main-frame {
+            flex: 1;
+            border: none;
+            height: 100%;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="frameset">
+        <iframe src="/aq3cms/top" name="top" class="top-frame" scrolling="no"></iframe>
+        <div class="content-container">
+            <iframe src="/aq3cms/menu" name="menu" class="menu-frame" scrolling="auto"></iframe>
+            <iframe src="/aq3cms/main" name="main" class="main-frame" scrolling="auto"></iframe>
+        </div>
+    </div>
+</body>
+</html>

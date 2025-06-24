@@ -1,0 +1,43 @@
+<!--
+ * @Author: dnsmap 5553557@gmail.com
+ * @Date: 2025-05-30 10:33:21
+ * @LastEditors: dnsmap 5553557@gmail.com
+ * @LastEditTime: 2025-05-30 14:31:05
+ * @FilePath: /aq3cms/templets/head.htm
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{aq3cms:global.cfg_webname/}</title>
+    <meta name="keywords" content="{aq3cms:global.cfg_keywords/}">
+    <meta name="description" content="{aq3cms:global.cfg_description/}">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="/"><img src="{aq3cms:global.cfg_web_logo/}" alt="{aq3cms:global.cfg_webname/}"></a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">首页</a></li>
+                    {aq3cms:channel type='top' row='10'}
+                    <li><a href="[field:typeurl/]">[field:typename/]</a></li>
+                    {/aq3cms:channel}
+                </ul>
+            </nav>
+            <div class="search">
+                <form action="/plus/search.php" method="get">
+                    <input type="text" name="q" placeholder="搜索...">
+                    <button type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </header>

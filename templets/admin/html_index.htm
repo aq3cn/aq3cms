@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页静态化 - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .main-content { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .content-header { padding: 20px; border-bottom: 1px solid #eee; }
+        .content-header h2 { margin: 0; color: #2c3e50; }
+        .content-body { padding: 20px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; transition: all 0.2s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-warning:hover { background: #e67e22; }
+        .info-box { background: #e8f4fd; border: 1px solid #bee5eb; border-radius: 5px; padding: 15px; margin-bottom: 20px; }
+        .info-box h4 { margin: 0 0 10px 0; color: #0c5460; }
+        .info-box p { margin: 5px 0; color: #0c5460; }
+        .status-box { background: #d4edda; border: 1px solid #c3e6cb; border-radius: 5px; padding: 15px; margin-bottom: 20px; }
+        .status-box.disabled { background: #f8d7da; border-color: #f5c6cb; }
+        .status-box h4 { margin: 0 0 10px 0; }
+        .status-box.disabled h4 { color: #721c24; }
+        .status-box p { margin: 5px 0; }
+        .form-actions { display: flex; gap: 10px; justify-content: center; padding-top: 20px; border-top: 1px solid #eee; }
+        .progress { width: 100%; height: 20px; background: #f8f9fa; border-radius: 10px; overflow: hidden; margin: 20px 0; display: none; }
+        .progress-bar { height: 100%; background: #28a745; transition: width 0.3s ease; }
+        .log-area { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; padding: 15px; height: 200px; overflow-y: auto; font-family: monospace; font-size: 12px; margin-top: 20px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏠 首页静态化</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/">查看网站</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <a href="/aq3cms/html_index">静态页面生成</a>
+            <span>></span>
+            <span>首页静态化</span>
+        </div>
+
+        <div class="main-content">
+            <div class="content-header">
+                <h2>🏗️ 首页静态化</h2>
+            </div>
+            
+            <div class="content-body">
+                <div class="info-box">
+                    <h4>📋 功能说明</h4>
+                    <p>• 生成网站首页的静态HTML文件</p>
+                    <p>• 提高首页访问速度，减少服务器负载</p>
+                    <p>• 生成的文件保存为网站根目录的index.html</p>
+                    <p>• 建议在内容更新后重新生成</p>
+                </div>
+
+                {{if .Config.Site.StaticIndex}}
+                <div class="status-box">
+                    <h4>✅ 首页静态化已启用</h4>
+                    <p>当前配置允许生成首页静态文件</p>
+                    <p>静态文件路径: {{.Config.Site.StaticDir}}/index.html</p>
+                </div>
+                {{else}}
+                <div class="status-box disabled">
+                    <h4>❌ 首页静态化已禁用</h4>
+                    <p>请在系统设置中启用首页静态化功能</p>
+                    <p>配置路径: 系统设置 > 静态化设置 > 启用首页静态化</p>
+                </div>
+                {{end}}
+
+                <form id="generateForm" method="POST" action="/aq3cms/html_index">
+                    <div class="form-actions">
+                        {{if .Config.Site.StaticIndex}}
+                        <button type="button" class="btn btn-warning" onclick="previewGenerate()">🔍 预览</button>
+                        <button type="submit" class="btn btn-success">🚀 生成首页</button>
+                        {{else}}
+                        <button type="button" class="btn btn-primary" onclick="goToSettings()">⚙️ 去设置</button>
+                        {{end}}
+                    </div>
+                </form>
+
+                <div class="progress" id="progressBar">
+                    <div class="progress-bar" style="width: 0%"></div>
+                </div>
+
+                <div class="log-area" id="logArea"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 预览生成
+        function previewGenerate() {
+            alert('将要生成首页静态文件:\n\n文件路径: index.html\n包含内容: 网站首页的完整HTML代码\n生成时间: 约1-3秒');
+        }
+
+        // 跳转到设置页面
+        function goToSettings() {
+            window.location.href = '/aq3cms/setting';
+        }
+
+        // 表单提交处理
+        document.getElementById('generateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!confirm('确定要生成首页静态文件吗？\n\n这将覆盖现有的index.html文件。')) {
+                return;
+            }
+            
+            // 显示进度条和日志区域
+            document.getElementById('progressBar').style.display = 'block';
+            document.getElementById('logArea').style.display = 'block';
+            
+            // 模拟进度
+            let progress = 0;
+            const progressBar = document.querySelector('.progress-bar');
+            const logArea = document.getElementById('logArea');
+            
+            logArea.innerHTML = `[${new Date().toLocaleTimeString()}] 开始生成首页静态文件...\n`;
+            
+            const interval = setInterval(() => {
+                progress += Math.random() * 30;
+                if (progress > 90) progress = 90;
+                
+                progressBar.style.width = progress + '%';
+                logArea.innerHTML += `[${new Date().toLocaleTimeString()}] 正在处理... ${Math.round(progress)}%\n`;
+                logArea.scrollTop = logArea.scrollHeight;
+            }, 300);
+            
+            // 提交表单
+            const formData = new FormData(this);
+            
+            fetch('/aq3cms/html_index', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                clearInterval(interval);
+                progressBar.style.width = '100%';
+                
+                if (data.success) {
+                    logArea.innerHTML += `[${new Date().toLocaleTimeString()}] ✅ ${data.message}\n`;
+                    logArea.innerHTML += `[${new Date().toLocaleTimeString()}] 文件已保存到: index.html\n`;
+                    alert('首页静态文件生成成功！');
+                } else {
+                    logArea.innerHTML += `[${new Date().toLocaleTimeString()}] ❌ 生成失败: ${data.message}\n`;
+                    alert('生成失败: ' + (data.message || '未知错误'));
+                }
+                
+                logArea.scrollTop = logArea.scrollHeight;
+            })
+            .catch(error => {
+                clearInterval(interval);
+                logArea.innerHTML += `[${new Date().toLocaleTimeString()}] ❌ 网络错误: ${error.message}\n`;
+                alert('网络错误: ' + error.message);
+                logArea.scrollTop = logArea.scrollHeight;
+            });
+        });
+    </script>
+</body>
+</html>

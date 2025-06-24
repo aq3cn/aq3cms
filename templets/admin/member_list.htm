@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员列表 - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; transition: all 0.2s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-warning:hover { background: #e67e22; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-info:hover { background: #138496; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-secondary { background: #95a5a6; color: white; }
+        .btn-secondary:hover { background: #7f8c8d; }
+        .btn-sm { padding: 5px 10px; font-size: 12px; }
+        .search-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .search-card h3 { margin: 0 0 15px 0; color: #2c3e50; display: flex; align-items: center; gap: 10px; }
+        .search-form { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 15px; align-items: end; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 5px; color: #2c3e50; font-weight: bold; }
+        .form-control { padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        .form-control:focus { outline: none; border-color: #3498db; box-shadow: 0 0 5px rgba(52, 152, 219, 0.3); }
+        .member-list-card { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .member-list-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .member-list-header h3 { margin: 0; color: #2c3e50; display: flex; align-items: center; gap: 10px; }
+        .member-table { width: 100%; border-collapse: collapse; }
+        .member-table th { background: #f8f9fa; padding: 15px; text-align: left; border-bottom: 1px solid #eee; color: #2c3e50; font-weight: bold; }
+        .member-table td { padding: 15px; border-bottom: 1px solid #f0f0f0; }
+        .member-table tr:hover { background: #f8f9fa; }
+        .member-avatar { width: 40px; height: 40px; border-radius: 50%; background: #3498db; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 10px; }
+        .member-info { display: flex; align-items: center; }
+        .member-name { font-weight: bold; color: #2c3e50; }
+        .member-status { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+        .member-status.active { background: #d4edda; color: #155724; }
+        .member-status.disabled { background: #f8d7da; color: #721c24; }
+        .member-type { padding: 4px 8px; border-radius: 12px; font-size: 12px; background: #e9ecef; color: #495057; }
+        .table-actions { display: flex; gap: 5px; }
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 10px; padding: 20px; }
+        .pagination a, .pagination span { padding: 8px 12px; border: 1px solid #ddd; border-radius: 5px; text-decoration: none; color: #2c3e50; }
+        .pagination a:hover { background: #3498db; color: white; border-color: #3498db; }
+        .pagination .active { background: #3498db; color: white; border-color: #3498db; }
+        .empty-state { padding: 60px 20px; text-align: center; color: #666; }
+        .empty-state .icon { font-size: 64px; margin-bottom: 15px; opacity: 0.5; }
+        @media (max-width: 768px) {
+            .search-form { grid-template-columns: 1fr; }
+            .member-table { font-size: 12px; }
+            .member-table th, .member-table td { padding: 10px 5px; }
+            .table-actions { flex-direction: column; gap: 2px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>👥 会员列表</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/">查看网站</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <a href="/aq3cms/member">会员管理</a>
+            <span>></span>
+            <span>会员列表</span>
+        </div>
+
+        <!-- 搜索表单 -->
+        <div class="search-card">
+            <h3>🔍 搜索会员</h3>
+            <form method="GET" action="/aq3cms/member_list" class="search-form">
+                <div class="form-group">
+                    <label>关键词</label>
+                    <input type="text" class="form-control" name="keyword"
+                           placeholder="搜索用户名或邮箱" value="{{.Keyword}}">
+                </div>
+                <div class="form-group">
+                    <label>会员类型</label>
+                    <select class="form-control" name="mtype">
+                        <option value="">所有类型</option>
+                        {{range .MemberTypes}}
+                        <option value="{{.ID}}" {{if eq $.MType .ID}}selected{{end}}>{{.TypeName}}</option>
+                        {{end}}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>排序方式</label>
+                    <select class="form-control" name="sort">
+                        <option value="">默认排序</option>
+                        <option value="regtime" {{if eq .Sort "regtime"}}selected{{end}}>注册时间</option>
+                        <option value="logintime" {{if eq .Sort "logintime"}}selected{{end}}>最后登录</option>
+                        <option value="score" {{if eq .Sort "score"}}selected{{end}}>积分</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">搜索</button>
+                    <a href="/aq3cms/member_list" class="btn btn-secondary">重置</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- 会员列表 -->
+        <div class="member-list-card">
+            <div class="member-list-header">
+                <h3>👥 会员列表 (共 {{.Pagination.Total}} 个)</h3>
+                <div>
+                    <a href="/aq3cms/member_add" class="btn btn-success">➕ 添加会员</a>
+                    <a href="/aq3cms/member" class="btn btn-secondary">📊 会员概览</a>
+                </div>
+            </div>
+            {{if .Members}}
+            <table class="member-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>会员信息</th>
+                        <th>邮箱</th>
+                        <th>类型</th>
+                        <th>性别</th>
+                        <th>积分</th>
+                        <th>余额</th>
+                        <th>注册时间</th>
+                        <th>最后登录</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .Members}}
+                    <tr>
+                        <td>{{.ID}}</td>
+                        <td>
+                            <div class="member-info">
+                                {{if .Face}}
+                                <img src="{{.Face}}" alt="头像" class="member-avatar">
+                                {{else}}
+                                <div class="member-avatar">{{substr .Username 0 1}}</div>
+                                {{end}}
+                                <div class="member-name">{{.Username}}</div>
+                            </div>
+                        </td>
+                        <td>{{.Email}}</td>
+                        <td>
+                            <span class="member-type">类型{{.MType}}</span>
+                        </td>
+                        <td>{{if .Sex}}{{.Sex}}{{else}}-{{end}}</td>
+                        <td>{{.Score}}</td>
+                        <td>¥{{printf "%.2f" .Money}}</td>
+                        <td>{{.RegTime.Format "2006-01-02"}}</td>
+                        <td>
+                            {{if .LastLogin.IsZero}}
+                            <span style="color: #999;">从未登录</span>
+                            {{else}}
+                            {{.LastLogin.Format "2006-01-02"}}
+                            {{end}}
+                        </td>
+                        <td>
+                            {{if eq .Status 1}}
+                            <span class="member-status active">正常</span>
+                            {{else}}
+                            <span class="member-status disabled">禁用</span>
+                            {{end}}
+                        </td>
+                        <td>
+                            <div class="table-actions">
+                                <a href="/aq3cms/member_edit/{{.ID}}" class="btn btn-sm btn-primary" title="编辑">✏️</a>
+                                <a href="/aq3cms/member_view/{{.ID}}" class="btn btn-sm btn-info" title="查看">👁️</a>
+                                <button type="button" class="btn btn-sm btn-danger"
+                                        onclick="deleteMember({{.ID}}, '{{.Username}}')" title="删除">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+            {{else}}
+            <div class="empty-state">
+                <div class="icon">👥</div>
+                <div>暂无会员数据</div>
+                <div style="margin-top: 15px;">
+                    <a href="/aq3cms/member_add" class="btn btn-success">添加第一个会员</a>
+                </div>
+            </div>
+            {{end}}
+        </div>
+
+        <!-- 分页 -->
+        {{if gt .Pagination.TotalPages 1}}
+        <div class="pagination">
+            {{if .Pagination.HasPrev}}
+            <a href="?page={{.Pagination.PrevPage}}{{if .Keyword}}&keyword={{.Keyword}}{{end}}{{if .MType}}&mtype={{.MType}}{{end}}{{if .Sort}}&sort={{.Sort}}{{end}}">上一页</a>
+            {{end}}
+
+            {{range .Pagination.PageNumbers}}
+            {{if eq . $.Pagination.Page}}
+            <span class="active">{{.}}</span>
+            {{else}}
+            <a href="?page={{.}}{{if $.Keyword}}&keyword={{$.Keyword}}{{end}}{{if $.MType}}&mtype={{$.MType}}{{end}}{{if $.Sort}}&sort={{$.Sort}}{{end}}">{{.}}</a>
+            {{end}}
+            {{end}}
+
+            {{if .Pagination.HasNext}}
+            <a href="?page={{.Pagination.NextPage}}{{if .Keyword}}&keyword={{.Keyword}}{{end}}{{if .MType}}&mtype={{.MType}}{{end}}{{if .Sort}}&sort={{.Sort}}{{end}}">下一页</a>
+            {{end}}
+        </div>
+        {{end}}
+    </div>
+
+    <script>
+        function deleteMember(id, username) {
+            if (confirm('确定要删除会员 "' + username + '" 吗？此操作不可恢复！')) {
+                fetch('/aq3cms/member_delete/' + id, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('删除成功！');
+                        location.reload();
+                    } else {
+                        alert('删除失败：' + (data.message || '未知错误'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('删除失败：网络错误');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

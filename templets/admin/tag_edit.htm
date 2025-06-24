@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑标签 - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .form-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .form-container h2 { margin: 0 0 30px 0; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #2c3e50; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; box-sizing: border-box; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #3498db; box-shadow: 0 0 5px rgba(52, 152, 219, 0.3); }
+        .form-row { display: flex; gap: 20px; }
+        .form-row .form-group { flex: 1; }
+        .checkbox-group { display: flex; gap: 20px; align-items: center; }
+        .checkbox-group label { display: flex; align-items: center; gap: 5px; font-weight: normal; margin-bottom: 0; }
+        .checkbox-group input[type="checkbox"] { width: auto; margin: 0; }
+        .btn { padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; transition: all 0.2s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-secondary { background: #95a5a6; color: white; margin-left: 10px; }
+        .btn-secondary:hover { background: #7f8c8d; }
+        .btn-info { background: #17a2b8; color: white; margin-left: 10px; }
+        .btn-info:hover { background: #138496; }
+        .form-actions { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: right; }
+        .help-text { font-size: 12px; color: #666; margin-top: 5px; }
+        .stats-panel { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin-top: 20px; }
+        .stats-panel h3 { margin: 0 0 15px 0; color: #2c3e50; font-size: 16px; }
+        .stats-table { width: 100%; }
+        .stats-table td { padding: 8px 0; border-bottom: 1px solid #eee; }
+        .stats-table td:first-child { font-weight: bold; color: #666; width: 120px; }
+        .tag-badge { padding: 4px 12px; border-radius: 12px; font-size: 12px; }
+        .tag-badge.hot { background: #e74c3c; color: white; }
+        .tag-badge.normal { background: #95a5a6; color: white; }
+        .tag-badge.count { background: #3498db; color: white; }
+        @media (max-width: 768px) {
+            .form-row { flex-direction: column; gap: 0; }
+            .checkbox-group { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏷️ 编辑标签</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/aq3cms/tag">标签管理</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <a href="/aq3cms/article">文章管理</a>
+            <span>></span>
+            <a href="/aq3cms/tag">标签管理</a>
+            <span>></span>
+            <a href="/aq3cms/tag_list">标签列表</a>
+            <span>></span>
+            <span>编辑标签</span>
+        </div>
+
+        <div class="form-container">
+            <h2>🏷️ 编辑标签 - {{.Tag.Tag}}</h2>
+
+            <form action="/aq3cms/tag_edit/{{.Tag.ID}}" method="post" id="tagForm">
+                <input type="hidden" name="id" value="{{.Tag.ID}}">
+
+                <div class="form-group">
+                    <label for="tag">标签名 *</label>
+                    <input type="text" id="tag" name="tag" required maxlength="30"
+                           value="{{.Tag.Tag}}" placeholder="请输入标签名">
+                    <div class="help-text">标签名最多30个字符，建议使用简短的关键词</div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="rank">排序值</label>
+                        <input type="number" id="rank" name="rank" value="{{.Tag.Rank}}"
+                               min="0" max="9999" placeholder="0">
+                        <div class="help-text">数字越大排序越靠前，默认为0</div>
+                    </div>
+                    <div class="form-group">
+                        <label>标签属性</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="ishot" name="ishot" value="1"
+                                   {{if eq .Tag.IsHot 1}}checked{{end}}> 设为热门标签</label>
+                        </div>
+                        <div class="help-text">热门标签会在前台优先显示</div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">💾 保存修改</button>
+                    <a href="/aq3cms/tag_list" class="btn btn-secondary">❌ 取消</a>
+                    <a href="/tag/{{.Tag.Tag}}" class="btn btn-info" target="_blank">👁️ 查看标签页</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="stats-panel">
+            <h3>📊 标签统计信息</h3>
+            <table class="stats-table">
+                <tr>
+                    <td>标签ID：</td>
+                    <td><strong>{{.Tag.ID}}</strong></td>
+                </tr>
+                <tr>
+                    <td>使用次数：</td>
+                    <td><span class="tag-badge count">{{.Tag.Count}}</span></td>
+                </tr>
+                <tr>
+                    <td>排序值：</td>
+                    <td>{{.Tag.Rank}}</td>
+                </tr>
+                <tr>
+                    <td>热门标签：</td>
+                    <td>
+                        {{if eq .Tag.IsHot 1}}
+                        <span class="tag-badge hot">是</span>
+                        {{else}}
+                        <span class="tag-badge normal">否</span>
+                        {{end}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>添加时间：</td>
+                    <td>
+                        {{if not .Tag.AddTime.IsZero}}
+                        {{.Tag.AddTime.Format "2006-01-02 15:04"}}
+                        {{else}}
+                        -
+                        {{end}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>最后使用：</td>
+                    <td>
+                        {{if not .Tag.LastUse.IsZero}}
+                        {{.Tag.LastUse.Format "2006-01-02 15:04"}}
+                        {{else}}
+                        -
+                        {{end}}
+                    </td>
+                </tr>
+                {{if .Tag.TagPinyin}}
+                <tr>
+                    <td>拼音：</td>
+                    <td><small style="color: #999;">{{.Tag.TagPinyin}}</small></td>
+                </tr>
+                {{end}}
+            </table>
+        </div>
+
+        <div class="stats-panel">
+            <h3>📝 编辑说明</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div>
+                    <h4 style="color: #e74c3c; margin: 0 0 10px 0;">修改标签名</h4>
+                    <ul>
+                        <li>修改后会影响所有使用该标签的文章</li>
+                        <li>建议谨慎修改已被大量使用的标签</li>
+                        <li>新标签名不能与现有标签重复</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 style="color: #3498db; margin: 0 0 10px 0;">排序设置</h4>
+                    <ul>
+                        <li>数字越大排序越靠前</li>
+                        <li>相同排序值按添加时间排序</li>
+                        <li>建议设置为10的倍数便于调整</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 style="color: #f39c12; margin: 0 0 10px 0;">热门标签</h4>
+                    <ul>
+                        <li>会在标签云中优先显示</li>
+                        <li>建议选择使用频率高的标签</li>
+                        <li>数量不宜过多，保持在10-20个</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 style="color: #27ae60; margin: 0 0 10px 0;">相关文章</h4>
+                    <p>该标签共被 <strong>{{.Tag.Count}}</strong> 篇文章使用</p>
+                    {{if gt .Tag.Count 0}}
+                    <a href="/aq3cms/article_list?tag={{.Tag.Tag}}" class="btn btn-primary" style="padding: 8px 16px; font-size: 12px;">
+                        📄 查看相关文章
+                    </a>
+                    {{else}}
+                    <p style="color: #999; margin: 0;">暂无文章使用该标签</p>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 表单验证
+        document.getElementById('tagForm').addEventListener('submit', function(e) {
+            const tag = document.getElementById('tag').value.trim();
+
+            if (tag === '') {
+                alert('请输入标签名');
+                document.getElementById('tag').focus();
+                e.preventDefault();
+                return false;
+            }
+
+            if (tag.length > 30) {
+                alert('标签名不能超过30个字符');
+                document.getElementById('tag').focus();
+                e.preventDefault();
+                return false;
+            }
+
+            // 检查是否包含特殊字符
+            const specialChars = /[<>'"&]/;
+            if (specialChars.test(tag)) {
+                alert('标签名不能包含特殊字符 < > \' " &');
+                document.getElementById('tag').focus();
+                e.preventDefault();
+                return false;
+            }
+
+            return true;
+        });
+
+        // 实时字符计数
+        document.getElementById('tag').addEventListener('input', function() {
+            const length = this.value.length;
+            const maxLength = 30;
+            const remaining = maxLength - length;
+
+            if (remaining < 0) {
+                this.value = this.value.substring(0, maxLength);
+            }
+
+            // 更新帮助文本
+            const helpText = this.parentNode.querySelector('.help-text');
+            let text = '标签名最多30个字符，建议使用简短的关键词';
+            if (length > 0) {
+                text += ` (已输入${length}个字符)`;
+            }
+            helpText.textContent = text;
+
+            // 颜色提示
+            if (remaining <= 5 && remaining >= 0) {
+                this.style.borderColor = '#f39c12';
+            } else if (length > 0) {
+                this.style.borderColor = '#27ae60';
+            } else {
+                this.style.borderColor = '#ddd';
+            }
+        });
+
+        // 标签名输入时自动去除首尾空格
+        document.getElementById('tag').addEventListener('blur', function() {
+            this.value = this.value.trim();
+        });
+    </script>
+</body>
+</html>

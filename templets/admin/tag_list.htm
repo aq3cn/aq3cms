@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>标签列表 - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .toolbar { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .toolbar .search-form { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .toolbar select, .toolbar input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; }
+        .toolbar .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-info:hover { background: #138496; }
+        .tag-table { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden; }
+        .table { width: 100%; border-collapse: collapse; }
+        .table th, .table td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        .table th { background: #f8f9fa; font-weight: bold; color: #2c3e50; }
+        .table tr:hover { background: #f8f9fa; }
+        .table .tag-name { font-weight: bold; color: #2c3e50; }
+        .table .tag-name a { color: #2c3e50; text-decoration: none; }
+        .table .tag-name a:hover { color: #3498db; }
+        .table .tag-count { background: #e8f4fd; color: #3498db; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+        .table .tag-hot { background: #e74c3c; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+        .table .tag-normal { background: #95a5a6; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+        .table .tag-actions { display: flex; gap: 8px; }
+        .table .tag-actions a { color: #3498db; text-decoration: none; font-size: 13px; padding: 4px 8px; border-radius: 3px; }
+        .table .tag-actions a:hover { background: #3498db; color: white; }
+        .table .tag-actions a.delete { color: #e74c3c; }
+        .table .tag-actions a.delete:hover { background: #e74c3c; color: white; }
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 20px; }
+        .pagination a, .pagination span { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #333; }
+        .pagination a:hover { background: #3498db; color: white; border-color: #3498db; }
+        .pagination .current { background: #3498db; color: white; border-color: #3498db; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #666; }
+        .empty-state .icon { font-size: 48px; margin-bottom: 15px; }
+        .empty-state h3 { margin: 0 0 10px 0; color: #2c3e50; }
+        .empty-state p { margin: 0 0 20px 0; }
+        .batch-actions { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: none; }
+        .batch-actions.show { display: block; }
+        @media (max-width: 768px) {
+            .toolbar .search-form { flex-direction: column; align-items: stretch; }
+            .table { font-size: 14px; }
+            .table th, .table td { padding: 8px; }
+            .tag-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏷️ 标签列表</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/aq3cms/tag">标签管理</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <a href="/aq3cms/article">文章管理</a>
+            <span>></span>
+            <a href="/aq3cms/tag">标签管理</a>
+            <span>></span>
+            <span>标签列表</span>
+        </div>
+
+        <div class="toolbar">
+            <form class="search-form" method="get">
+                <input type="text" name="keyword" value="{{.Keyword}}" placeholder="搜索标签名称...">
+                <button type="submit" class="btn btn-primary">🔍 搜索</button>
+                {{if .Keyword}}
+                <a href="/aq3cms/tag_list" class="btn btn-primary">🔄 清除</a>
+                {{end}}
+                <a href="/aq3cms/tag_add" class="btn btn-success">➕ 添加标签</a>
+                <button type="button" class="btn btn-danger" onclick="batchDelete()" id="batchDeleteBtn" style="display:none;">🗑️ 批量删除</button>
+            </form>
+        </div>
+
+        <div class="batch-actions" id="batchActions">
+            <label>
+                <input type="checkbox" id="selectAll"> 全选
+            </label>
+            <span id="selectedCount">已选择 0 个标签</span>
+        </div>
+
+        {{if .Tags}}
+        <div class="tag-table">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th width="40"><input type="checkbox" id="selectAllHeader"></th>
+                        <th width="60">ID</th>
+                        <th>标签名</th>
+                        <th width="100">使用次数</th>
+                        <th width="80">排序</th>
+                        <th width="80">热门</th>
+                        <th width="120">添加时间</th>
+                        <th width="120">最后使用</th>
+                        <th width="150">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .Tags}}
+                    <tr>
+                        <td><input type="checkbox" class="tag-checkbox" value="{{.ID}}"></td>
+                        <td>{{.ID}}</td>
+                        <td class="tag-name">
+                            <a href="/tag/{{.Tag}}" target="_blank" title="查看标签页">{{.Tag}}</a>
+                            {{if .TagPinyin}}
+                            <br><small style="color: #999; font-size: 12px;">{{.TagPinyin}}</small>
+                            {{end}}
+                        </td>
+                        <td>
+                            {{if gt .Count 0}}
+                            <span class="tag-count">{{.Count}}</span>
+                            {{else}}
+                            <span style="color: #999;">0</span>
+                            {{end}}
+                        </td>
+                        <td>{{.Rank}}</td>
+                        <td>
+                            {{if eq .IsHot 1}}
+                            <span class="tag-hot">热门</span>
+                            {{else}}
+                            <span class="tag-normal">普通</span>
+                            {{end}}
+                        </td>
+                        <td>
+                            {{if not .AddTime.IsZero}}
+                            {{.AddTime.Format "2006-01-02"}}
+                            {{else}}
+                            -
+                            {{end}}
+                        </td>
+                        <td>
+                            {{if not .LastUse.IsZero}}
+                            {{.LastUse.Format "2006-01-02"}}
+                            {{else}}
+                            -
+                            {{end}}
+                        </td>
+                        <td>
+                            <div class="tag-actions">
+                                <a href="/aq3cms/tag_edit/{{.ID}}">编辑</a>
+                                <a href="/tag/{{.Tag}}" target="_blank">查看</a>
+                                <a href="/aq3cms/tag_delete/{{.ID}}" class="delete" onclick="return confirm('确定要删除标签 \'{{.Tag}}\' 吗？\n删除后相关的文章标签关联也会被删除！')">删除</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+
+        {{if .Pagination}}
+        <div class="pagination">
+            {{if .Pagination.HasPrev}}
+            <a href="?page={{.Pagination.PrevPage}}{{if .Keyword}}&keyword={{.Keyword}}{{end}}">上一页</a>
+            {{end}}
+
+            {{range $i := .Pagination.Pages}}
+            {{if eq $i $.Pagination.CurrentPage}}
+            <span class="current">{{$i}}</span>
+            {{else}}
+            <a href="?page={{$i}}{{if $.Keyword}}&keyword={{$.Keyword}}{{end}}">{{$i}}</a>
+            {{end}}
+            {{end}}
+
+            {{if .Pagination.HasNext}}
+            <a href="?page={{.Pagination.NextPage}}{{if .Keyword}}&keyword={{.Keyword}}{{end}}">下一页</a>
+            {{end}}
+
+            <span>共 {{.Total}} 个标签</span>
+        </div>
+        {{end}}
+
+        {{else}}
+        <div class="empty-state">
+            <div class="icon">🏷️</div>
+            <h3>{{if .Keyword}}没有找到匹配的标签{{else}}暂无标签{{end}}</h3>
+            <p>{{if .Keyword}}请尝试其他关键词搜索{{else}}还没有创建任何标签，点击下面的按钮开始创建第一个标签吧！{{end}}</p>
+            <a href="/aq3cms/tag_add" class="btn btn-success">➕ 添加标签</a>
+        </div>
+        {{end}}
+    </div>
+
+    <script>
+        // 全选功能
+        document.getElementById('selectAll').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.tag-checkbox');
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateBatchActions();
+        });
+
+        document.getElementById('selectAllHeader').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.tag-checkbox');
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateBatchActions();
+        });
+
+        // 单个复选框变化
+        document.querySelectorAll('.tag-checkbox').forEach(cb => {
+            cb.addEventListener('change', updateBatchActions);
+        });
+
+        function updateBatchActions() {
+            const checkboxes = document.querySelectorAll('.tag-checkbox');
+            const checked = document.querySelectorAll('.tag-checkbox:checked');
+            const batchActions = document.getElementById('batchActions');
+            const batchDeleteBtn = document.getElementById('batchDeleteBtn');
+            const selectedCount = document.getElementById('selectedCount');
+
+            if (checked.length > 0) {
+                batchActions.classList.add('show');
+                batchDeleteBtn.style.display = 'inline-block';
+                selectedCount.textContent = `已选择 ${checked.length} 个标签`;
+            } else {
+                batchActions.classList.remove('show');
+                batchDeleteBtn.style.display = 'none';
+            }
+
+            // 更新全选状态
+            document.getElementById('selectAll').checked = checked.length === checkboxes.length;
+            document.getElementById('selectAllHeader').checked = checked.length === checkboxes.length;
+        }
+
+        function batchDelete() {
+            const checked = document.querySelectorAll('.tag-checkbox:checked');
+            if (checked.length === 0) {
+                alert('请选择要删除的标签');
+                return;
+            }
+
+            if (!confirm(`确定要删除选中的 ${checked.length} 个标签吗？\n删除后相关的文章标签关联也会被删除！`)) {
+                return;
+            }
+
+            const ids = Array.from(checked).map(cb => cb.value);
+
+            // 发送批量删除请求
+            fetch('/aq3cms/tag_batch_delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'ids=' + ids.join(',')
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('删除成功');
+                    location.reload();
+                } else {
+                    alert('删除失败：' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('删除失败：' + error.message);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+{aq3cms:include file='head.htm'/}
+
+<div class="container main-container">
+    <div class="row">
+        <!-- 主内容区 -->
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <!-- 面包屑导航 -->
+                    <ol class="breadcrumb">
+                        <li><a href="/">首页</a></li>
+                        <li class="active">搜索结果</li>
+                    </ol>
+                    
+                    <!-- 搜索表单 -->
+                    <div class="search-form-box">
+                        <form class="form-inline" action="/search" method="get">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="keyword" value="{aq3cms:global name='keyword'/}" placeholder="搜索关键词">
+                            </div>
+                            <button type="submit" class="btn btn-primary">搜索</button>
+                            <a href="/search/advanced" class="btn btn-link">高级搜索</a>
+                        </form>
+                    </div>
+                    
+                    <!-- 搜索结果 -->
+                    <div class="search-result-box">
+                        <h3>关键词 "{aq3cms:global name='keyword'/}" 的搜索结果</h3>
+                        
+                        <!-- 文章列表 -->
+                        <ul class="media-list">
+                            {aq3cms:list pagesize='10'}
+                            <li class="media">
+                                <div class="media-left">
+                                    <a href="[field:arcurl/]">
+                                        <img class="media-object" src="[field:litpic/]" alt="[field:title/]">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading"><a href="[field:arcurl/]">[field:title/]</a></h4>
+                                    <div class="article-meta">
+                                        <span><i class="glyphicon glyphicon-folder-open"></i> [field:typename/]</span>
+                                        <span><i class="glyphicon glyphicon-user"></i> [field:writer/]</span>
+                                        <span><i class="glyphicon glyphicon-time"></i> [field:pubdate function="MyDate('Y-m-d',@me)"/]</span>
+                                        <span><i class="glyphicon glyphicon-eye-open"></i> [field:click/]次阅读</span>
+                                    </div>
+                                    <p class="article-description">[field:description function='cn_substr(@me,200)'/]...</p>
+                                    <a href="[field:arcurl/]" class="btn btn-default btn-sm">阅读全文</a>
+                                </div>
+                            </li>
+                            {/aq3cms:list}
+                        </ul>
+                        
+                        <!-- 分页 -->
+                        <div class="pagination-box">
+                            <ul class="pagination">
+                                {aq3cms:pagelist listitem="info,index,end,pre,next,pageno" listsize="5"/}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 侧边栏 -->
+        <div class="col-md-4">
+            <!-- 热门搜索 -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">热门搜索</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="tag-cloud">
+                        {aq3cms:hotwords row=20}
+                        <a href="/search?keyword=[field:keyword/]" class="tag-item">[field:keyword/]</a>
+                        {/aq3cms:hotwords}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 热门文章 -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">热门文章</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="article-list">
+                        {aq3cms:arclist typeid=0 row=10 orderby=click}
+                        <li>
+                            <span class="pull-right text-muted">[field:click/]</span>
+                            <a href="[field:arcurl/]">[field:title/]</a>
+                        </li>
+                        {/aq3cms:arclist}
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 最新文章 -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">最新文章</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="article-list">
+                        {aq3cms:arclist typeid=0 row=10 orderby=pubdate}
+                        <li>
+                            <span class="pull-right text-muted">[field:pubdate function="MyDate('m-d',@me)"/]</span>
+                            <a href="[field:arcurl/]">[field:title/]</a>
+                        </li>
+                        {/aq3cms:arclist}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{aq3cms:include file='footer.htm'/}

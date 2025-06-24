@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.PageTitle}} - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .form-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        .form-group .help-text { font-size: 12px; color: #666; margin-top: 5px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .btn-group { text-align: center; margin-top: 30px; }
+        .btn { padding: 12px 30px; margin: 0 10px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; text-decoration: none; display: inline-block; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-secondary { background: #95a5a6; color: white; }
+        .btn-secondary:hover { background: #7f8c8d; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .alert { padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; }
+        .checkbox-group input[type="checkbox"] { width: auto; }
+        .cache-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center; }
+        .stat-card .number { font-size: 24px; font-weight: bold; color: #2c3e50; }
+        .stat-card .label { color: #666; margin-top: 5px; }
+        .info-box { background: #e8f4fd; border: 1px solid #bee5eb; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .info-box h4 { margin: 0 0 10px 0; color: #0c5460; }
+        .info-box p { margin: 0; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 缓存设置</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/aq3cms/setting">设置首页</a>
+            <a href="/">查看网站</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <a href="/aq3cms/setting">系统设置</a>
+            <span>></span>
+            <span>缓存设置</span>
+        </div>
+
+        {{if .Message}}
+        <div class="alert alert-{{.MessageType}}">
+            {{.Message}}
+        </div>
+        {{end}}
+
+        <div class="info-box">
+            <h4>📊 缓存统计</h4>
+            <div class="cache-stats">
+                <div class="stat-card">
+                    <div class="number">{{.Config.Cache.Type}}</div>
+                    <div class="label">缓存类型</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">1,234</div>
+                    <div class="label">缓存键数量</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">85%</div>
+                    <div class="label">命中率</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">12.5MB</div>
+                    <div class="label">内存使用</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <form method="POST" action="/aq3cms/setting/cache">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cache_type">缓存类型</label>
+                        <select id="cache_type" name="cache_type">
+                            <option value="redis" {{if eq .Config.Cache.Type "redis"}}selected{{end}}>Redis</option>
+                            <option value="memory" {{if eq .Config.Cache.Type "memory"}}selected{{end}}>内存缓存</option>
+                            <option value="file" {{if eq .Config.Cache.Type "file"}}selected{{end}}>文件缓存</option>
+                        </select>
+                        <div class="help-text">选择缓存存储方式</div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="enable_cache" name="enable_cache" value="1" checked>
+                            <label for="enable_cache">启用缓存</label>
+                        </div>
+                        <div class="help-text">开启后将使用缓存提高性能</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="default_expire">默认过期时间 (秒)</label>
+                        <input type="number" id="default_expire" name="default_expire" value="3600" min="60" max="86400">
+                        <div class="help-text">缓存项的默认过期时间</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="max_memory">最大内存使用 (MB)</label>
+                        <input type="number" id="max_memory" name="max_memory" value="128" min="16" max="1024">
+                        <div class="help-text">缓存可使用的最大内存</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="page_cache_time">页面缓存时间 (分钟)</label>
+                        <input type="number" id="page_cache_time" name="page_cache_time" value="30" min="1" max="1440">
+                        <div class="help-text">页面内容的缓存时间</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="api_cache_time">API缓存时间 (分钟)</label>
+                        <input type="number" id="api_cache_time" name="api_cache_time" value="10" min="1" max="60">
+                        <div class="help-text">API接口的缓存时间</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="cache_templates" name="cache_templates" value="1" checked>
+                            <label for="cache_templates">缓存模板</label>
+                        </div>
+                        <div class="help-text">缓存编译后的模板文件</div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="cache_database" name="cache_database" value="1" checked>
+                            <label for="cache_database">缓存数据库查询</label>
+                        </div>
+                        <div class="help-text">缓存数据库查询结果</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="cache_static" name="cache_static" value="1">
+                            <label for="cache_static">缓存静态资源</label>
+                        </div>
+                        <div class="help-text">缓存CSS、JS等静态资源</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cleanup_interval">清理间隔 (小时)</label>
+                        <input type="number" id="cleanup_interval" name="cleanup_interval" value="24" min="1" max="168">
+                        <div class="help-text">自动清理过期缓存的间隔时间</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cache_prefix">缓存前缀</label>
+                    <input type="text" id="cache_prefix" name="cache_prefix" value="aq3cms:" placeholder="aq3cms:">
+                    <div class="help-text">缓存键的前缀，用于区分不同应用的缓存</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="exclude_paths">排除路径</label>
+                    <textarea id="exclude_paths" name="exclude_paths" placeholder="每行一个路径，支持通配符">/admin/*
+/api/upload/*
+/aq3cms/*</textarea>
+                    <div class="help-text">不进行缓存的路径列表，每行一个，支持通配符</div>
+                </div>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">保存设置</button>
+                    <button type="button" class="btn btn-danger" onclick="clearCache()">清除所有缓存</button>
+                    <a href="/aq3cms/setting" class="btn btn-secondary">返回</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function clearCache() {
+            if (confirm('确定要清除所有缓存吗？这将影响网站性能，直到缓存重新建立。')) {
+                fetch('/aq3cms/setting/clear_cache', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        alert('缓存清除成功！');
+                        location.reload();
+                    } else {
+                        alert('缓存清除失败，请稍后重试。');
+                    }
+                }).catch(error => {
+                    alert('操作失败：' + error.message);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

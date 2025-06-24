@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专题页静态化 - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .main-content { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .content-header { padding: 20px; border-bottom: 1px solid #eee; }
+        .content-header h2 { margin: 0; color: #2c3e50; }
+        .content-body { padding: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #2c3e50; }
+        .form-select { width: 100%; padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; background: white; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; transition: all 0.2s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-info:hover { background: #138496; }
+        .form-actions { display: flex; gap: 10px; justify-content: flex-end; padding-top: 20px; border-top: 1px solid #eee; }
+        .info-box { background: #e8f4fd; border: 1px solid #bee5eb; border-radius: 5px; padding: 15px; margin-bottom: 20px; }
+        .info-box h4 { margin: 0 0 10px 0; color: #0c5460; }
+        .info-box p { margin: 5px 0; color: #0c5460; }
+        .special-list { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; padding: 15px; margin-bottom: 20px; }
+        .special-list h4 { margin: 0 0 15px 0; color: #495057; }
+        .special-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #dee2e6; }
+        .special-item:last-child { border-bottom: none; }
+        .special-name { font-weight: bold; color: #495057; }
+        .special-info { color: #6c757d; font-size: 12px; }
+        .progress { width: 100%; height: 20px; background: #f8f9fa; border-radius: 10px; overflow: hidden; margin: 20px 0; display: none; }
+        .progress-bar { height: 100%; background: #28a745; transition: width 0.3s ease; }
+        .log-area { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; padding: 15px; height: 200px; overflow-y: auto; font-family: monospace; font-size: 12px; margin-top: 20px; display: none; }
+        @media (max-width: 768px) {
+            .form-actions { flex-direction: column; }
+            .btn { width: 100%; margin-bottom: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 专题页静态化</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/">查看网站</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <a href="/aq3cms/html_index">静态页面生成</a>
+            <span>></span>
+            <span>专题页静态化</span>
+        </div>
+
+        <div class="main-content">
+            <div class="content-header">
+                <h2>🏗️ 专题页静态化</h2>
+            </div>
+            
+            <div class="content-body">
+                <div class="info-box">
+                    <h4>📋 功能说明</h4>
+                    <p>• 生成专题页面的静态HTML文件</p>
+                    <p>• 支持指定专题或全部专题生成</p>
+                    <p>• 生成的文件保存在网站根目录的special目录下</p>
+                    <p>• 专题页面通常包含多篇相关文章的聚合内容</p>
+                </div>
+
+                {{if .Specials}}
+                <div class="special-list">
+                    <h4>🎯 专题列表</h4>
+                    {{range .Specials}}
+                    <div class="special-item">
+                        <div>
+                            <span class="special-name">{{.Title}}</span>
+                            <span class="special-info">(ID: {{.ID}})</span>
+                        </div>
+                        <div class="special-info">
+                            {{.Filename}} | 文章数: {{.ArticleCount}}
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+                {{else}}
+                <div class="special-list">
+                    <h4>🎯 专题列表</h4>
+                    <p style="color: #6c757d; text-align: center; padding: 20px;">暂无专题数据</p>
+                </div>
+                {{end}}
+
+                <form id="generateForm" method="POST" action="/aq3cms/html_special">
+                    <div class="form-group">
+                        <label for="specialid">选择专题</label>
+                        <select name="specialid" id="specialid" class="form-select">
+                            <option value="">全部专题</option>
+                            {{range .Specials}}
+                            <option value="{{.ID}}">{{.Title}} ({{.Filename}})</option>
+                            {{end}}
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-info" onclick="previewGenerate()">🔍 预览</button>
+                        <button type="submit" class="btn btn-success">🚀 开始生成</button>
+                    </div>
+                </form>
+
+                <div class="progress" id="progressBar">
+                    <div class="progress-bar" style="width: 0%"></div>
+                </div>
+
+                <div class="log-area" id="logArea"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 预览生成
+        function previewGenerate() {
+            const specialid = document.getElementById('specialid').value;
+            
+            let message = '将要生成的专题页面:\n\n';
+            
+            if (specialid) {
+                const selectedOption = document.querySelector(`option[value="${specialid}"]`);
+                const specialName = selectedOption.textContent;
+                message += `专题: ${specialName}\n`;
+                message += `文件: special/${specialid}.html\n`;
+            } else {
+                message += '专题: 全部专题\n';
+                message += '文件: 每个专题的详情页面\n';
+            }
+            
+            alert(message);
+        }
+
+        // 表单提交处理
+        document.getElementById('generateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const specialid = document.getElementById('specialid').value;
+            const specialName = specialid ? document.querySelector(`option[value="${specialid}"]`).textContent : '全部专题';
+            
+            if (!confirm(`确定要生成 ${specialName} 的静态页面吗？`)) {
+                return;
+            }
+            
+            // 显示进度条和日志区域
+            document.getElementById('progressBar').style.display = 'block';
+            document.getElementById('logArea').style.display = 'block';
+            
+            // 模拟进度
+            let progress = 0;
+            const progressBar = document.querySelector('.progress-bar');
+            const logArea = document.getElementById('logArea');
+            
+            logArea.innerHTML = `[${new Date().toLocaleTimeString()}] 开始生成专题静态页面...\n`;
+            
+            const interval = setInterval(() => {
+                progress += Math.random() * 25;
+                if (progress > 90) progress = 90;
+                
+                progressBar.style.width = progress + '%';
+                logArea.innerHTML += `[${new Date().toLocaleTimeString()}] 正在处理专题... ${Math.round(progress)}%\n`;
+                logArea.scrollTop = logArea.scrollHeight;
+            }, 600);
+            
+            // 提交表单
+            const formData = new FormData(this);
+            
+            fetch('/aq3cms/html_special', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                clearInterval(interval);
+                progressBar.style.width = '100%';
+                
+                if (data.success) {
+                    logArea.innerHTML += `[${new Date().toLocaleTimeString()}] ✅ ${data.message}\n`;
+                    alert('专题静态页面生成成功！');
+                } else {
+                    logArea.innerHTML += `[${new Date().toLocaleTimeString()}] ❌ 生成失败: ${data.message}\n`;
+                    alert('生成失败: ' + (data.message || '未知错误'));
+                }
+                
+                logArea.scrollTop = logArea.scrollHeight;
+            })
+            .catch(error => {
+                clearInterval(interval);
+                logArea.innerHTML += `[${new Date().toLocaleTimeString()}] ❌ 网络错误: ${error.message}\n`;
+                alert('网络错误: ' + error.message);
+                logArea.scrollTop = logArea.scrollHeight;
+            });
+        });
+    </script>
+</body>
+</html>

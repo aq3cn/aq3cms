@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.PageTitle}} - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .function-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .function-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .function-card h3 { margin: 0 0 15px 0; color: #2c3e50; display: flex; align-items: center; gap: 10px; }
+        .function-card .description { color: #666; margin-bottom: 20px; line-height: 1.5; }
+        .function-card .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; transition: all 0.2s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-warning:hover { background: #e67e22; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-secondary { background: #95a5a6; color: white; }
+        .btn-secondary:hover { background: #7f8c8d; }
+        .alert { padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .alert-warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .info-section { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .info-section h3 { margin: 0 0 20px 0; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .info-item { padding: 15px; background: #f8f9fa; border-radius: 5px; text-align: center; }
+        .info-value { font-size: 24px; font-weight: bold; color: #2c3e50; }
+        .info-label { color: #666; margin-top: 5px; font-size: 14px; }
+        .upload-area { border: 2px dashed #ddd; border-radius: 8px; padding: 30px; text-align: center; background: #fafafa; margin: 15px 0; }
+        .upload-area:hover { border-color: #3498db; background: #f0f8ff; }
+        .upload-area input[type="file"] { display: none; }
+        .upload-label { cursor: pointer; color: #3498db; font-weight: bold; }
+        .upload-label:hover { color: #2980b9; }
+        .file-info { margin-top: 10px; color: #666; font-size: 14px; }
+        .progress-bar { width: 100%; height: 20px; background: #f0f0f0; border-radius: 10px; overflow: hidden; margin: 10px 0; display: none; }
+        .progress-fill { height: 100%; background: #3498db; width: 0%; transition: width 0.3s; }
+        .table-list { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .table-list table { width: 100%; border-collapse: collapse; }
+        .table-list th, .table-list td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
+        .table-list th { background: #f8f9fa; font-weight: bold; color: #555; }
+        .table-list tr:hover { background: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🗄️ 数据库管理</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/aq3cms/setting">设置首页</a>
+            <a href="/aq3cms/system_config">系统配置</a>
+            <a href="/">查看网站</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <a href="/aq3cms/setting">系统设置</a>
+            <span>></span>
+            <span>数据库管理</span>
+        </div>
+
+        {{if .Message}}
+        <div class="alert alert-{{.MessageType}}">
+            {{.Message}}
+        </div>
+        {{end}}
+
+        <div class="info-section">
+            <h3>📊 数据库信息</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-value">{{.Config.Database.Type}}</div>
+                    <div class="info-label">数据库类型</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-value">{{.Config.Database.Host}}:{{.Config.Database.Port}}</div>
+                    <div class="info-label">服务器地址</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-value">{{.Config.Database.Database}}</div>
+                    <div class="info-label">数据库名称</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-value">{{.Config.Database.Prefix}}</div>
+                    <div class="info-label">表前缀</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-value">{{.Config.Database.Charset}}</div>
+                    <div class="info-label">字符集</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-value">在线</div>
+                    <div class="info-label">连接状态</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="function-grid">
+            <div class="function-card">
+                <h3>💾 数据库备份</h3>
+                <div class="description">
+                    将当前数据库导出为SQL文件，用于数据备份和迁移。备份文件将保存在服务器的备份目录中。
+                </div>
+                <div class="actions">
+                    <button class="btn btn-success" onclick="backupDatabase()">立即备份</button>
+                    <button class="btn btn-primary" onclick="downloadBackup()">下载备份</button>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <h3>📥 数据库恢复</h3>
+                <div class="description">
+                    从SQL备份文件恢复数据库。请注意，恢复操作将覆盖当前数据，请谨慎操作。
+                </div>
+                <form id="restoreForm" enctype="multipart/form-data">
+                    <div class="upload-area" onclick="document.getElementById('backupFile').click()">
+                        <label class="upload-label">
+                            📁 点击选择备份文件
+                            <input type="file" id="backupFile" name="backup_file" accept=".sql" onchange="showFileInfo(this)">
+                        </label>
+                        <div class="file-info" id="fileInfo">支持 .sql 格式的备份文件</div>
+                    </div>
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="actions">
+                        <button type="button" class="btn btn-warning" onclick="restoreDatabase()">开始恢复</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearFile()">清除文件</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="function-card">
+                <h3>🔧 数据库优化</h3>
+                <div class="description">
+                    优化数据库表结构，清理碎片，提高查询性能。建议定期执行以保持数据库最佳状态。
+                </div>
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="optimizeDatabase()">优化数据库</button>
+                    <button class="btn btn-secondary" onclick="analyzeDatabase()">分析表</button>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <h3>🧹 数据清理</h3>
+                <div class="description">
+                    清理过期数据、临时文件和无用记录，释放存储空间。包括日志清理、缓存清理等。
+                </div>
+                <div class="actions">
+                    <button class="btn btn-warning" onclick="cleanupData()">清理数据</button>
+                    <button class="btn btn-danger" onclick="clearLogs()" title="清除系统日志">清除日志</button>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <h3>📋 表管理</h3>
+                <div class="description">
+                    查看和管理数据库表，包括表结构查看、数据统计、表修复等功能。
+                </div>
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="showTables()">查看表</button>
+                    <button class="btn btn-secondary" onclick="checkTables()">检查表</button>
+                    <button class="btn btn-warning" onclick="repairTables()">修复表</button>
+                </div>
+            </div>
+
+            <div class="function-card">
+                <h3>📈 数据统计</h3>
+                <div class="description">
+                    查看数据库使用统计，包括表大小、记录数量、索引使用情况等详细信息。
+                </div>
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="showStats()">查看统计</button>
+                    <button class="btn btn-secondary" onclick="exportStats()">导出报告</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-list" id="tableList" style="display: none;">
+            <h3 style="padding: 15px; margin: 0; background: #f8f9fa; border-bottom: 1px solid #eee;">数据库表列表</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>表名</th>
+                        <th>记录数</th>
+                        <th>大小</th>
+                        <th>引擎</th>
+                        <th>字符集</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr>
+                        <td>{{.Config.Database.Prefix}}admin</td>
+                        <td>1</td>
+                        <td>16 KB</td>
+                        <td>InnoDB</td>
+                        <td>utf8mb4</td>
+                        <td>
+                            <button class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;">查看</button>
+                            <button class="btn btn-warning" style="padding: 5px 10px; font-size: 12px;">优化</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{.Config.Database.Prefix}}archives</td>
+                        <td>0</td>
+                        <td>16 KB</td>
+                        <td>InnoDB</td>
+                        <td>utf8mb4</td>
+                        <td>
+                            <button class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;">查看</button>
+                            <button class="btn btn-warning" style="padding: 5px 10px; font-size: 12px;">优化</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{.Config.Database.Prefix}}arctype</td>
+                        <td>4</td>
+                        <td>16 KB</td>
+                        <td>InnoDB</td>
+                        <td>utf8mb4</td>
+                        <td>
+                            <button class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;">查看</button>
+                            <button class="btn btn-warning" style="padding: 5px 10px; font-size: 12px;">优化</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function backupDatabase() {
+            if (confirm('确定要备份数据库吗？这可能需要一些时间。')) {
+                fetch('/aq3cms/system_backup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        alert('数据库备份成功！');
+                        location.reload();
+                    } else {
+                        alert('备份失败，请稍后重试。');
+                    }
+                }).catch(error => {
+                    alert('操作失败：' + error.message);
+                });
+            }
+        }
+
+        function restoreDatabase() {
+            const fileInput = document.getElementById('backupFile');
+            if (!fileInput.files[0]) {
+                alert('请先选择备份文件！');
+                return;
+            }
+
+            if (confirm('确定要恢复数据库吗？这将覆盖当前所有数据，请确保已做好备份！')) {
+                const formData = new FormData();
+                formData.append('backup_file', fileInput.files[0]);
+
+                const progressBar = document.getElementById('progressBar');
+                const progressFill = document.getElementById('progressFill');
+                
+                progressBar.style.display = 'block';
+                progressFill.style.width = '0%';
+
+                // 模拟进度
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 10;
+                    progressFill.style.width = progress + '%';
+                    if (progress >= 90) {
+                        clearInterval(interval);
+                    }
+                }, 200);
+
+                fetch('/aq3cms/system_restore', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => {
+                    clearInterval(interval);
+                    progressFill.style.width = '100%';
+                    
+                    setTimeout(() => {
+                        progressBar.style.display = 'none';
+                        if (response.ok) {
+                            alert('数据库恢复成功！');
+                            location.reload();
+                        } else {
+                            alert('恢复失败，请检查备份文件格式。');
+                        }
+                    }, 500);
+                }).catch(error => {
+                    clearInterval(interval);
+                    progressBar.style.display = 'none';
+                    alert('操作失败：' + error.message);
+                });
+            }
+        }
+
+        function showFileInfo(input) {
+            const fileInfo = document.getElementById('fileInfo');
+            if (input.files[0]) {
+                const file = input.files[0];
+                const size = (file.size / 1024 / 1024).toFixed(2);
+                fileInfo.innerHTML = `已选择: ${file.name} (${size} MB)`;
+            } else {
+                fileInfo.innerHTML = '支持 .sql 格式的备份文件';
+            }
+        }
+
+        function clearFile() {
+            document.getElementById('backupFile').value = '';
+            document.getElementById('fileInfo').innerHTML = '支持 .sql 格式的备份文件';
+        }
+
+        function optimizeDatabase() {
+            if (confirm('确定要优化数据库吗？这可能需要一些时间。')) {
+                alert('数据库优化功能正在开发中...');
+            }
+        }
+
+        function analyzeDatabase() {
+            alert('数据库分析功能正在开发中...');
+        }
+
+        function cleanupData() {
+            if (confirm('确定要清理过期数据吗？')) {
+                alert('数据清理功能正在开发中...');
+            }
+        }
+
+        function clearLogs() {
+            if (confirm('确定要清除所有系统日志吗？')) {
+                alert('日志清理功能正在开发中...');
+            }
+        }
+
+        function showTables() {
+            const tableList = document.getElementById('tableList');
+            if (tableList.style.display === 'none') {
+                tableList.style.display = 'block';
+                event.target.textContent = '隐藏表';
+            } else {
+                tableList.style.display = 'none';
+                event.target.textContent = '查看表';
+            }
+        }
+
+        function checkTables() {
+            alert('表检查功能正在开发中...');
+        }
+
+        function repairTables() {
+            if (confirm('确定要修复数据库表吗？')) {
+                alert('表修复功能正在开发中...');
+            }
+        }
+
+        function showStats() {
+            alert('数据统计功能正在开发中...');
+        }
+
+        function exportStats() {
+            alert('统计报告导出功能正在开发中...');
+        }
+
+        function downloadBackup() {
+            alert('备份下载功能正在开发中...');
+        }
+    </script>
+</body>
+</html>

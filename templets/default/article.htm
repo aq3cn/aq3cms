@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <meta name="keywords" content="{{.Keywords}}">
+    <meta name="description" content="{{.Description}}">
+    <style>
+        /* 参考 index.htm 的样式风格 */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .site-info { display: flex; align-items: center; gap: 15px; }
+        .header .site-info a { color: white; text-decoration: none; }
+        .header .site-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+
+        /* 文章头部样式 */
+        .article-header { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .article-header h1 { margin: 0 0 20px 0; color: #2c3e50; font-size: 32px; line-height: 1.3; }
+        .article-meta { display: flex; flex-wrap: wrap; gap: 20px; color: #666; font-size: 14px; padding: 15px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
+        .article-meta .meta-item { display: flex; align-items: center; gap: 5px; }
+        .article-meta .meta-icon { font-size: 16px; }
+
+        /* 文章摘要样式 */
+        .article-description { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; color: #666; font-style: italic; border-left: 4px solid #3498db; }
+
+        /* 两列布局 */
+        .two-column { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+
+        /* 文章内容样式 */
+        .article-content { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .article-content .content-header { padding: 20px; border-bottom: 1px solid #eee; }
+        .article-content .content-body { padding: 30px; line-height: 1.8; color: #333; }
+        .article-content .content-body h1, .article-content .content-body h2, .article-content .content-body h3 { color: #2c3e50; margin-top: 30px; margin-bottom: 15px; }
+        .article-content .content-body h1 { font-size: 28px; }
+        .article-content .content-body h2 { font-size: 24px; }
+        .article-content .content-body h3 { font-size: 20px; }
+        .article-content .content-body p { margin-bottom: 15px; }
+        .article-content .content-body img { max-width: 100%; height: auto; border-radius: 8px; margin: 20px 0; }
+        .article-content .content-body blockquote { background: #f8f9fa; padding: 20px; border-left: 4px solid #3498db; margin: 20px 0; font-style: italic; }
+        .article-content .content-body code { background: #f8f9fa; padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; }
+        .article-content .content-body pre { background: #f8f9fa; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; }
+
+        /* 文章标签样式 */
+        .article-tags { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .article-tags h3 { margin: 0 0 15px 0; color: #2c3e50; }
+        .tag-item { display: inline-block; margin: 3px; padding: 5px 10px; background: #f8f9fa; color: #666; text-decoration: none; border-radius: 15px; font-size: 12px; transition: all 0.2s; }
+        .tag-item:hover { background: #3498db; color: #fff; text-decoration: none; }
+
+        /* 文章导航样式 */
+        .article-nav { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .article-nav h3 { margin: 0 0 15px 0; color: #2c3e50; }
+        .nav-item { padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+        .nav-item:last-child { border-bottom: none; }
+        .nav-item a { color: #666; text-decoration: none; transition: color 0.2s; }
+        .nav-item a:hover { color: #3498db; }
+        .nav-label { font-weight: bold; color: #2c3e50; margin-right: 10px; }
+
+        /* 相关文章样式 */
+        .related-articles { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .related-articles h3 { margin: 0; padding: 20px; border-bottom: 1px solid #eee; color: #2c3e50; }
+        .related-articles .content { padding: 20px; }
+        .related-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0; transition: background 0.2s; }
+        .related-item:hover { background: #f8f9fa; }
+        .related-item:last-child { border-bottom: none; }
+        .related-icon { width: 30px; height: 30px; border-radius: 50%; background: #3498db; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-right: 10px; }
+        .related-info { flex: 1; }
+        .related-title { font-weight: bold; color: #2c3e50; margin-bottom: 3px; }
+        .related-title a { color: #2c3e50; text-decoration: none; }
+        .related-title a:hover { color: #3498db; }
+
+        /* 评论区样式 */
+        .comments-section { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .comments-section h3 { margin: 0; padding: 20px; border-bottom: 1px solid #eee; color: #2c3e50; }
+        .comments-section .content { padding: 20px; }
+
+        /* 侧边栏样式 */
+        .sidebar-card { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .sidebar-card h3 { margin: 0; padding: 20px; border-bottom: 1px solid #eee; color: #2c3e50; }
+        .sidebar-card .content { padding: 20px; }
+
+        /* 按钮样式 */
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; transition: all 0.2s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-info:hover { background: #138496; }
+
+        /* 文章列表样式 */
+        .article-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0; transition: background 0.2s; }
+        .article-item:hover { background: #f8f9fa; }
+        .article-item:last-child { border-bottom: none; }
+        .article-icon { width: 30px; height: 30px; border-radius: 50%; background: #3498db; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-right: 10px; }
+        .article-info { flex: 1; }
+        .article-title { font-weight: bold; color: #2c3e50; margin-bottom: 3px; }
+        .article-title a { color: #2c3e50; text-decoration: none; }
+        .article-title a:hover { color: #3498db; }
+        .article-meta-small { color: #666; font-size: 12px; }
+
+        /* 页脚样式 */
+        .footer { background: #2c3e50; color: white; padding: 30px 0; margin-top: 40px; }
+        .footer p { margin: 5px 0; }
+        .footer a { color: #3498db; }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .two-column { grid-template-columns: 1fr; }
+            .header { flex-direction: column; gap: 10px; text-align: center; }
+            .article-meta { flex-direction: column; gap: 10px; }
+            .article-header h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏠 {{.SiteName}}</h1>
+        <div class="site-info">
+            <a href="/">返回首页</a>
+            <a href="/aq3cms/login">管理后台</a>
+            <a href="/search">搜索</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/">网站首页</a>
+            <span>></span>
+            <a href="/{{.Category.TypeDir}}">{{.Category.TypeName}}</a>
+            <span>></span>
+            <span>{{.Article.Title}}</span>
+        </div>
+
+        <!-- 文章头部信息 -->
+        <div class="article-header">
+            <h1>{{.Article.Title}}</h1>
+            {{if .Article.Description}}
+            <div class="article-description">{{.Article.Description}}</div>
+            {{end}}
+            <div class="article-meta">
+                <div class="meta-item">
+                    <span class="meta-icon">👤</span>
+                    <span>作者：{{.Article.Writer}}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-icon">📅</span>
+                    <span>发布时间：{{.Article.PubDate}}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-icon">👀</span>
+                    <span>阅读量：{{.Article.Click}} 次</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-icon">📁</span>
+                    <span>栏目：<a href="/{{.Category.TypeDir}}">{{.Category.TypeName}}</a></span>
+                </div>
+                {{if .Article.Source}}
+                <div class="meta-item">
+                    <span class="meta-icon">🔗</span>
+                    <span>来源：{{.Article.Source}}</span>
+                </div>
+                {{end}}
+            </div>
+        </div>
+
+        <!-- 两列布局：文章内容和侧边栏 -->
+        <div class="two-column">
+            <div>
+                <!-- 文章内容 -->
+                <div class="article-content">
+                    <div class="content-header">
+                        <h3>📄 文章内容</h3>
+                    </div>
+                    <div class="content-body">
+                        {{.Article.Body}}
+                    </div>
+                </div>
+
+                <!-- 文章标签 -->
+                {{if .Article.Tags}}
+                <div class="article-tags">
+                    <h3>🏷️ 文章标签</h3>
+                    <div class="tag-cloud">
+                        {{range .Article.TagList}}
+                        <a href="/tag/{{.}}" class="tag-item">{{.}}</a>
+                        {{end}}
+                    </div>
+                </div>
+                {{end}}
+
+                <!-- 上一篇下一篇 -->
+                <div class="article-nav">
+                    <h3>📖 文章导航</h3>
+                    <div class="nav-item">
+                        <span class="nav-label">上一篇：</span>
+                        {{if .PrevArticle}}
+                        <a href="/article/{{.PrevArticle.ID}}.html">{{.PrevArticle.Title}}</a>
+                        {{else}}
+                        <span style="color: #999;">没有了</span>
+                        {{end}}
+                    </div>
+                    <div class="nav-item">
+                        <span class="nav-label">下一篇：</span>
+                        {{if .NextArticle}}
+                        <a href="/article/{{.NextArticle.ID}}.html">{{.NextArticle.Title}}</a>
+                        {{else}}
+                        <span style="color: #999;">没有了</span>
+                        {{end}}
+                    </div>
+                </div>
+
+                <!-- 相关文章 -->
+                {{if .RelatedArticles}}
+                <div class="related-articles">
+                    <h3>📚 相关文章</h3>
+                    <div class="content">
+                        {{range .RelatedArticles}}
+                        <div class="related-item">
+                            <div class="related-icon">📄</div>
+                            <div class="related-info">
+                                <div class="related-title">
+                                    <a href="/article/{{.ID}}.html">{{.Title}}</a>
+                                </div>
+                                <div class="article-meta-small">{{.PubDate}} • 点击：{{.Click}}</div>
+                            </div>
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+                {{end}}
+
+                <!-- 评论区 -->
+                <div class="comments-section">
+                    <h3>💬 文章评论</h3>
+                    <div class="content">
+                        <p style="color: #666; text-align: center; padding: 20px;">
+                            评论功能正在开发中，敬请期待...
+                        </p>
+                        <!-- 这里可以集成评论系统 -->
+                    </div>
+                </div>
+            </div>
+            <!-- 侧边栏 -->
+            <div>
+                <!-- 文章信息 -->
+                <div class="sidebar-card">
+                    <h3>ℹ️ 文章信息</h3>
+                    <div class="content">
+                        <p><strong>文章标题：</strong>{{.Article.Title}}</p>
+                        <p><strong>所属栏目：</strong><a href="/{{.Category.TypeDir}}">{{.Category.TypeName}}</a></p>
+                        <p><strong>发布时间：</strong>{{.Article.PubDate}}</p>
+                        <p><strong>阅读次数：</strong>{{.Article.Click}} 次</p>
+                        {{if .Article.Source}}
+                        <p><strong>文章来源：</strong>{{.Article.Source}}</p>
+                        {{end}}
+                        <hr>
+                        <p><a href="/{{.Category.TypeDir}}" class="btn btn-primary">返回栏目</a></p>
+                        <p><a href="/" class="btn btn-info">返回首页</a></p>
+                    </div>
+                </div>
+
+                <!-- 栏目导航 -->
+                <div class="sidebar-card">
+                    <h3>📁 栏目导航</h3>
+                    <div class="content">
+                        {{if .Categories}}
+                        {{range .Categories}}
+                        <div class="article-item">
+                            <div class="article-icon">📁</div>
+                            <div class="article-info">
+                                <div class="article-title">
+                                    <a href="/{{.TypeDir}}">{{.TypeName}}</a>
+                                </div>
+                            </div>
+                        </div>
+                        {{end}}
+                        {{else}}
+                        <!-- 默认栏目导航 -->
+                        <div class="article-item">
+                            <div class="article-icon">📁</div>
+                            <div class="article-info">
+                                <div class="article-title">
+                                    <a href="/news">新闻资讯</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="article-item">
+                            <div class="article-icon">📁</div>
+                            <div class="article-info">
+                                <div class="article-title">
+                                    <a href="/products">产品展示</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="article-item">
+                            <div class="article-icon">📁</div>
+                            <div class="article-info">
+                                <div class="article-title">
+                                    <a href="/docs">文档中心</a>
+                                </div>
+                            </div>
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+
+                <!-- 热门文章 -->
+                <div class="sidebar-card">
+                    <h3>🔥 热门文章</h3>
+                    <div class="content">
+                        {{if .HotArticles}}
+                        {{range .HotArticles}}
+                        <div class="article-item">
+                            <div class="article-icon">🔥</div>
+                            <div class="article-info">
+                                <div class="article-title">
+                                    <a href="/article/{{.ID}}.html">{{.Title}}</a>
+                                </div>
+                                <div class="article-meta-small">点击：{{.Click}} 次</div>
+                            </div>
+                        </div>
+                        {{end}}
+                        {{else}}
+                        <!-- 默认热门文章 -->
+                        <div class="article-item">
+                            <div class="article-icon">🔥</div>
+                            <div class="article-info">
+                                <div class="article-title">
+                                    <a href="/article/1.html">aq3cms 安装配置指南</a>
+                                </div>
+                                <div class="article-meta-small">点击：1256 次</div>
+                            </div>
+                        </div>
+                        <div class="article-item">
+                            <div class="article-icon">🔥</div>
+                            <div class="article-info">
+                                <div class="article-title">
+                                    <a href="/article/2.html">模板开发入门教程</a>
+                                </div>
+                                <div class="article-meta-small">点击：998 次</div>
+                            </div>
+                        </div>
+                        <div class="article-item">
+                            <div class="article-icon">🔥</div>
+                            <div class="article-info">
+                                <div class="article-title">
+                                    <a href="/article/3.html">插件开发指南</a>
+                                </div>
+                                <div class="article-meta-small">点击：856 次</div>
+                            </div>
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+
+                <!-- 本栏目热门文章 -->
+                <div class="sidebar-card">
+                    <h3>📈 {{.Category.TypeName}}热门文章</h3>
+                    <div class="content">
+                        {{if .CategoryHotArticles}}
+                        {{range .CategoryHotArticles}}
+                        <div class="article-item">
+                            <div class="article-icon">📈</div>
+                            <div class="article-info">
+                                <div class="article-title">
+                                    <a href="/article/{{.ID}}.html">{{.Title}}</a>
+                                </div>
+                                <div class="article-meta-small">{{.PubDate}} • {{.Click}} 次</div>
+                            </div>
+                        </div>
+                        {{end}}
+                        {{else}}
+                        <p style="color: #666; text-align: center;">暂无热门文章</p>
+                        {{end}}
+                    </div>
+                </div>
+
+                <!-- 最新文章 -->
+                <div class="sidebar-card">
+                    <h3>📰 最新文章</h3>
+                    <div class="content">
+                        {{if .LatestArticles}}
+                        {{range .LatestArticles}}
+                        <div class="article-item">
+                            <div class="article-icon">📰</div>
+                            <div class="article-info">
+                                <div class="article-title">
+                                    <a href="/article/{{.ID}}.html">{{.Title}}</a>
+                                </div>
+                                <div class="article-meta-small">{{.PubDate}}</div>
+                            </div>
+                        </div>
+                        {{end}}
+                        {{else}}
+                        <!-- 默认最新文章 -->
+                        <div class="article-item">
+                            <div class="article-icon">📰</div>
+                            <div class="article-info">
+                                <div class="article-title">
+                                    <a href="/article/1.html">aq3cms 内容管理系统发布</a>
+                                </div>
+                                <div class="article-meta-small">{{substr .CurrentTime 0 10}}</div>
+                            </div>
+                        </div>
+                        <div class="article-item">
+                            <div class="article-icon">📰</div>
+                            <div class="article-info">
+                                <div class="article-title">
+                                    <a href="/article/2.html">如何使用 aq3cms 创建网站</a>
+                                </div>
+                                <div class="article-meta-small">{{substr .CurrentTime 0 10}}</div>
+                            </div>
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <p>{{.CopyRight}}</p>
+                    <p>站点地址: <a href="{{.SiteURL}}">{{.SiteURL}}</a></p>
+                </div>
+                <div style="text-align: right;">
+                    <p>Powered by <a href="/">aq3cms</a> | Go 语言驱动</p>
+                    <p>系统版本: {{.Version}} | 当前时间: {{.CurrentTime}}</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

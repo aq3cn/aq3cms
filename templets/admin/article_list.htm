@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.PageTitle}} - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .toolbar { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .toolbar .search-form { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .toolbar select, .toolbar input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; }
+        .toolbar .btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .article-table { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden; }
+        .table { width: 100%; border-collapse: collapse; }
+        .table th, .table td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        .table th { background: #f8f9fa; font-weight: bold; color: #2c3e50; }
+        .table tr:hover { background: #f8f9fa; }
+        .table .article-title { font-weight: bold; color: #2c3e50; max-width: 300px; }
+        .table .article-title a { color: #2c3e50; text-decoration: none; }
+        .table .article-title a:hover { color: #3498db; }
+        .table .article-category { background: #e8f4fd; color: #3498db; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+        .table .article-status { padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+        .table .article-status.published { background: #e8f5e8; color: #27ae60; }
+        .table .article-status.draft { background: #fdf2e8; color: #f39c12; }
+        .table .article-actions { display: flex; gap: 8px; }
+        .table .article-actions a { color: #3498db; text-decoration: none; font-size: 13px; padding: 4px 8px; border-radius: 3px; }
+        .table .article-actions a:hover { background: #3498db; color: white; }
+        .table .article-actions a.delete { color: #e74c3c; }
+        .table .article-actions a.delete:hover { background: #e74c3c; color: white; }
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 20px; }
+        .pagination a, .pagination span { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #333; }
+        .pagination a:hover { background: #3498db; color: white; border-color: #3498db; }
+        .pagination .current { background: #3498db; color: white; border-color: #3498db; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #666; }
+        .empty-state .icon { font-size: 48px; margin-bottom: 15px; }
+        .empty-state h3 { margin: 0 0 10px 0; color: #2c3e50; }
+        .empty-state p { margin: 0 0 20px 0; }
+        .batch-actions { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: none; }
+        .batch-actions.show { display: block; }
+        @media (max-width: 768px) {
+            .toolbar .search-form { flex-direction: column; align-items: stretch; }
+            .table { font-size: 14px; }
+            .table th, .table td { padding: 8px; }
+            .article-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📄 文章列表</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/aq3cms/article">文章管理</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <a href="/aq3cms/article">文章管理</a>
+            <span>></span>
+            <span>文章列表</span>
+        </div>
+
+        <div class="toolbar">
+            <form class="search-form" method="get">
+                <select name="typeid">
+                    <option value="">全部栏目</option>
+                    {{range .Categories}}
+                    <option value="{{.ID}}" {{if eq $.TypeID .ID}}selected{{end}}>{{.TypeName}}</option>
+                    {{end}}
+                </select>
+                <input type="text" name="keyword" value="{{.Keyword}}" placeholder="搜索文章标题...">
+                <button type="submit" class="btn btn-primary">🔍 搜索</button>
+                <a href="/aq3cms/article_add" class="btn btn-success">➕ 添加文章</a>
+                <button type="button" class="btn btn-danger" onclick="batchDelete()" id="batchDeleteBtn" style="display:none;">🗑️ 批量删除</button>
+            </form>
+        </div>
+
+        <div class="batch-actions" id="batchActions">
+            <label>
+                <input type="checkbox" id="selectAll"> 全选
+            </label>
+            <span id="selectedCount">已选择 0 篇文章</span>
+        </div>
+
+        {{if .Articles}}
+        <div class="article-table">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th width="40"><input type="checkbox" id="selectAllHeader"></th>
+                        <th width="60">ID</th>
+                        <th>标题</th>
+                        <th width="120">栏目</th>
+                        <th width="80">作者</th>
+                        <th width="80">点击</th>
+                        <th width="120">发布时间</th>
+                        <th width="80">状态</th>
+                        <th width="150">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .Articles}}
+                    <tr>
+                        <td><input type="checkbox" class="article-checkbox" value="{{.ID}}"></td>
+                        <td>{{.ID}}</td>
+                        <td class="article-title">
+                            <a href="/article/{{.ID}}.html" target="_blank" title="{{.Title}}">
+                                {{if .Color}}<span style="color: {{.Color}}">{{.Title}}</span>{{else}}{{.Title}}{{end}}
+                            </a>
+                            {{if .IsTop}}<span style="color: red;">[置顶]</span>{{end}}
+                            {{if .IsRecommend}}<span style="color: orange;">[推荐]</span>{{end}}
+                            {{if .IsHot}}<span style="color: red;">[热门]</span>{{end}}
+                        </td>
+                        <td><span class="article-category">{{.CategoryName}}</span></td>
+                        <td>{{.Writer}}</td>
+                        <td>{{.Click}}</td>
+                        <td>{{.PubDate.Format "2006-01-02"}}</td>
+                        <td>
+                            {{if eq .ArcRank 0}}
+                            <span class="article-status published">已发布</span>
+                            {{else}}
+                            <span class="article-status draft">待审核</span>
+                            {{end}}
+                        </td>
+                        <td>
+                            <div class="article-actions">
+                                <a href="/aq3cms/article_edit/{{.ID}}">编辑</a>
+                                <a href="/article/{{.ID}}.html" target="_blank">查看</a>
+                                <a href="/aq3cms/article_delete/{{.ID}}" class="delete" onclick="return confirm('确定要删除这篇文章吗？')">删除</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+
+        {{if .Pagination}}
+        <div class="pagination">
+            {{if .Pagination.HasPrev}}
+            <a href="?page={{.Pagination.PrevPage}}{{if .TypeID}}&typeid={{.TypeID}}{{end}}{{if .Keyword}}&keyword={{.Keyword}}{{end}}">上一页</a>
+            {{end}}
+            
+            {{range $i := .Pagination.Pages}}
+            {{if eq $i $.Pagination.CurrentPage}}
+            <span class="current">{{$i}}</span>
+            {{else}}
+            <a href="?page={{$i}}{{if $.TypeID}}&typeid={{$.TypeID}}{{end}}{{if $.Keyword}}&keyword={{$.Keyword}}{{end}}">{{$i}}</a>
+            {{end}}
+            {{end}}
+            
+            {{if .Pagination.HasNext}}
+            <a href="?page={{.Pagination.NextPage}}{{if .TypeID}}&typeid={{.TypeID}}{{end}}{{if .Keyword}}&keyword={{.Keyword}}{{end}}">下一页</a>
+            {{end}}
+            
+            <span>共 {{.Pagination.TotalItems}} 篇文章</span>
+        </div>
+        {{end}}
+
+        {{else}}
+        <div class="empty-state">
+            <div class="icon">📄</div>
+            <h3>暂无文章</h3>
+            <p>还没有发布任何文章，点击下面的按钮开始创建第一篇文章吧！</p>
+            <a href="/aq3cms/article_add" class="btn btn-success">➕ 添加文章</a>
+        </div>
+        {{end}}
+    </div>
+
+    <script>
+        // 全选功能
+        document.getElementById('selectAll').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.article-checkbox');
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateBatchActions();
+        });
+
+        document.getElementById('selectAllHeader').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.article-checkbox');
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            updateBatchActions();
+        });
+
+        // 单个复选框变化
+        document.querySelectorAll('.article-checkbox').forEach(cb => {
+            cb.addEventListener('change', updateBatchActions);
+        });
+
+        function updateBatchActions() {
+            const checkboxes = document.querySelectorAll('.article-checkbox');
+            const checked = document.querySelectorAll('.article-checkbox:checked');
+            const batchActions = document.getElementById('batchActions');
+            const batchDeleteBtn = document.getElementById('batchDeleteBtn');
+            const selectedCount = document.getElementById('selectedCount');
+
+            if (checked.length > 0) {
+                batchActions.classList.add('show');
+                batchDeleteBtn.style.display = 'inline-block';
+                selectedCount.textContent = `已选择 ${checked.length} 篇文章`;
+            } else {
+                batchActions.classList.remove('show');
+                batchDeleteBtn.style.display = 'none';
+            }
+
+            // 更新全选状态
+            document.getElementById('selectAll').checked = checked.length === checkboxes.length;
+            document.getElementById('selectAllHeader').checked = checked.length === checkboxes.length;
+        }
+
+        function batchDelete() {
+            const checked = document.querySelectorAll('.article-checkbox:checked');
+            if (checked.length === 0) {
+                alert('请选择要删除的文章');
+                return;
+            }
+
+            if (!confirm(`确定要删除选中的 ${checked.length} 篇文章吗？此操作不可恢复！`)) {
+                return;
+            }
+
+            const ids = Array.from(checked).map(cb => cb.value);
+            
+            // 发送批量删除请求
+            fetch('/aq3cms/article_batch_delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'ids=' + ids.join(',')
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('删除成功');
+                    location.reload();
+                } else {
+                    alert('删除失败：' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('删除失败：' + error.message);
+            });
+        }
+    </script>
+</body>
+</html>

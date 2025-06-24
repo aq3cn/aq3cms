@@ -1,0 +1,122 @@
+2025/06/24 13:36:58 [INFO] database.go:49 数据库连接成功 type=mysql host=mysql
+2025/06/24 13:36:58 [INFO] main.go:49 数据库连接成功 type=mysql host=mysql
+2025/06/24 13:36:58 [INFO] admin.go:323 默认管理员已存在，跳过初始化
+2025/06/24 13:36:58 [INFO] main.go:59 初始化缓存 type=memory
+2025/06/24 13:36:58 [INFO] main.go:62 使用内存缓存
+2025/06/24 13:36:58 [INFO] main.go:108 服务器启动 地址=0.0.0.0:8080
+2025/06/24 13:37:53 [INFO] index.go:57 访问首页 path=/
+2025/06/24 13:37:53 [INFO] logger.go:28 HTTP请求 method=GET path=/ query= status=200 duration=17.510935ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=
+2025/06/24 13:37:56 [INFO] index.go:57 访问首页 path=/
+2025/06/24 13:37:56 [INFO] logger.go:28 HTTP请求 method=GET path=/ query= status=200 duration=276.731µs ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=
+2025/06/24 13:38:00 [INFO] login.go:41 访问后台登录页面 path=/aq3cms/login
+2025/06/24 13:38:00 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/login query= status=200 duration=121.25µs ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/
+2025/06/24 13:38:02 [INFO] login.go:134 开始验证用户 username=admin
+2025/06/24 13:38:02 [INFO] login.go:159 找到管理员 adminID=1 username=admin status=1
+2025/06/24 13:38:02 [INFO] login.go:162 开始验证密码 username=admin
+2025/06/24 13:38:02 [INFO] login.go:170 密码验证成功 - 方式1
+2025/06/24 13:38:02 [INFO] login.go:210 密码验证成功 username=admin
+2025/06/24 13:38:02 [INFO] auth.go:161 创建管理员会话 adminID=1 adminName=admin adminRank=10
+2025/06/24 13:38:02 [INFO] auth.go:180 管理员会话创建成功 adminID=1
+2025/06/24 13:38:02 [ERROR] admin.go:254 更新管理员失败 id=1 error=Error 1054: Unknown column 'lastlogin' in 'field list'
+2025/06/24 13:38:02 [INFO] login.go:243 管理员登录 username=admin ip=172.20.0.1:48296
+2025/06/24 13:38:02 [INFO] logger.go:28 HTTP请求 method=POST path=/aq3cms/login query= status=302 duration=2.183467ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/login
+2025/06/24 13:38:02 [INFO] index.go:303 访问后台框架页 path=/aq3cms/
+2025/06/24 13:38:02 [INFO] index.go:46 访问后台首页 path=/aq3cms/
+2025/06/24 13:38:02 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/ query= status=200 duration=5.509058ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/login
+2025/06/24 13:38:04 [INFO] index.go:303 访问后台框架页 path=/aq3cms/
+2025/06/24 13:38:04 [INFO] index.go:46 访问后台首页 path=/aq3cms/
+2025/06/24 13:38:04 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/ query= status=200 duration=1.626811ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/login
+2025/06/24 13:38:05 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/article query= status=200 duration=5.191994ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/
+2025/06/24 13:38:08 [INFO] index.go:303 访问后台框架页 path=/aq3cms/
+2025/06/24 13:38:08 [INFO] index.go:46 访问后台首页 path=/aq3cms/
+2025/06/24 13:38:08 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/ query= status=200 duration=1.384961ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/article
+2025/06/24 13:38:12 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/article query= status=200 duration=3.068958ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/
+2025/06/24 13:38:26 [INFO] index.go:57 访问首页 path=/
+2025/06/24 13:38:26 [INFO] logger.go:28 HTTP请求 method=GET path=/ query= status=200 duration=274.365µs ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/article
+2025/06/24 13:38:38 [INFO] index.go:57 访问首页 path=/
+2025/06/24 13:38:38 [INFO] logger.go:28 HTTP请求 method=GET path=/ query= status=200 duration=238.067µs ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/
+2025/06/24 13:38:39 [INFO] login.go:41 访问后台登录页面 path=/aq3cms/login
+2025/06/24 13:38:39 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/login query= status=302 duration=232.254µs ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/
+2025/06/24 13:38:39 [INFO] index.go:303 访问后台框架页 path=/aq3cms/
+2025/06/24 13:38:39 [INFO] index.go:46 访问后台首页 path=/aq3cms/
+2025/06/24 13:38:39 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/ query= status=200 duration=2.482586ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/
+2025/06/24 13:38:40 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/article query= status=200 duration=2.719493ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/
+2025/06/24 13:38:46 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/category_list query= status=200 duration=5.402684ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/article
+2025/06/24 13:38:48 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/category_edit/1 query= status=200 duration=2.849894ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/category_list
+2025/06/24 13:38:50 [INFO] logger.go:28 HTTP请求 method=POST path=/aq3cms/category_edit/1 query= status=302 duration=2.700224ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/category_edit/1
+2025/06/24 13:38:50 [INFO] html.go:111 开始生成列表页 typeid=1
+2025/06/24 13:38:50 [INFO] html.go:247 列表页生成完成 typeid=1
+2025/06/24 13:38:50 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/category_list query= status=200 duration=5.915727ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/category_edit/1
+2025/06/24 13:38:54 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/category_edit/7 query= status=200 duration=1.823829ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/category_list
+2025/06/24 13:39:00 [INFO] logger.go:28 HTTP请求 method=POST path=/aq3cms/category_edit/1 query= status=302 duration=6.843988ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/category_edit/7
+2025/06/24 13:39:00 [INFO] html.go:111 开始生成列表页 typeid=1
+2025/06/24 13:39:00 [INFO] html.go:247 列表页生成完成 typeid=1
+2025/06/24 13:39:00 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/category_list query= status=200 duration=3.637079ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/category_edit/7
+2025/06/24 13:39:01 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/category_list query= status=200 duration=4.003673ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/category_edit/7
+2025/06/24 13:39:08 [INFO] index.go:303 访问后台框架页 path=/aq3cms/
+2025/06/24 13:39:08 [INFO] index.go:46 访问后台首页 path=/aq3cms/
+2025/06/24 13:39:08 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/ query= status=200 duration=1.470274ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/category_list
+2025/06/24 13:39:10 [INFO] index.go:303 访问后台框架页 path=/aq3cms/
+2025/06/24 13:39:10 [INFO] index.go:46 访问后台首页 path=/aq3cms/
+2025/06/24 13:39:10 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/ query= status=200 duration=1.551296ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/category_list
+2025/06/24 13:39:13 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/member query= status=200 duration=5.977543ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/
+2025/06/24 13:39:17 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/template query= status=200 duration=5.536978ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/
+2025/06/24 13:39:21 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/template_edit query=file=templets%2fadmin%2farticle_index.htm status=200 duration=4.580638ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/template
+2025/06/24 13:39:23 [INFO] index.go:303 访问后台框架页 path=/aq3cms/
+2025/06/24 13:39:23 [INFO] index.go:46 访问后台首页 path=/aq3cms/
+2025/06/24 13:39:23 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/ query= status=200 duration=1.536099ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/template_edit?file=templets%2fadmin%2farticle_index.htm
+2025/06/24 13:39:26 [INFO] index.go:303 访问后台框架页 path=/aq3cms/
+2025/06/24 13:39:26 [INFO] index.go:46 访问后台首页 path=/aq3cms/
+2025/06/24 13:39:26 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/ query= status=200 duration=1.937062ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/template_edit?file=templets%2fadmin%2farticle_index.htm
+2025/06/24 13:39:26 [INFO] index.go:303 访问后台框架页 path=/aq3cms/
+2025/06/24 13:39:26 [INFO] index.go:46 访问后台首页 path=/aq3cms/
+2025/06/24 13:39:26 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/ query= status=200 duration=1.450105ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/template_edit?file=templets%2fadmin%2farticle_index.htm
+2025/06/24 13:39:26 [INFO] index.go:303 访问后台框架页 path=/aq3cms/
+2025/06/24 13:39:26 [INFO] index.go:46 访问后台首页 path=/aq3cms/
+2025/06/24 13:39:26 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/ query= status=200 duration=1.394256ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/template_edit?file=templets%2fadmin%2farticle_index.htm
+2025/06/24 13:39:26 [INFO] index.go:303 访问后台框架页 path=/aq3cms/
+2025/06/24 13:39:26 [INFO] index.go:46 访问后台首页 path=/aq3cms/
+2025/06/24 13:39:26 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/ query= status=200 duration=1.28274ms ip=172.20.0.1:48296 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/template_edit?file=templets%2fadmin%2farticle_index.htm
+2025/06/24 14:18:16 [INFO] index.go:303 访问后台框架页 path=/aq3cms/
+2025/06/24 14:18:16 [INFO] index.go:46 访问后台首页 path=/aq3cms/
+2025/06/24 14:18:16 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/ query= status=200 duration=1.625655ms ip=172.20.0.1:43014 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/template_edit?file=templets%2fadmin%2farticle_index.htm
+2025/06/24 14:18:18 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/category query= status=200 duration=2.06062ms ip=172.20.0.1:43014 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/
+2025/06/24 14:23:46 [INFO] index.go:303 访问后台框架页 path=/aq3cms/
+2025/06/24 14:23:46 [INFO] index.go:46 访问后台首页 path=/aq3cms/
+2025/06/24 14:23:46 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/ query= status=200 duration=1.532505ms ip=172.20.0.1:35850 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/category
+2025/06/24 14:23:49 [INFO] index.go:303 访问后台框架页 path=/aq3cms/
+2025/06/24 14:23:49 [INFO] index.go:46 访问后台首页 path=/aq3cms/
+2025/06/24 14:23:49 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/ query= status=200 duration=1.695516ms ip=172.20.0.1:35850 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/category
+2025/06/24 14:24:00 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/article query= status=200 duration=3.203124ms ip=172.20.0.1:35850 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/
+2025/06/24 14:24:01 [INFO] index.go:303 访问后台框架页 path=/aq3cms/
+2025/06/24 14:24:01 [INFO] index.go:46 访问后台首页 path=/aq3cms/
+2025/06/24 14:24:01 [INFO] logger.go:28 HTTP请求 method=GET path=/aq3cms/ query= status=200 duration=1.378767ms ip=172.20.0.1:35850 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/aq3cms/article
+2025/06/24 14:24:05 [INFO] index.go:57 访问首页 path=/
+2025/06/24 14:24:05 [INFO] logger.go:28 HTTP请求 method=GET path=/ query= status=200 duration=270.102µs ip=172.20.0.1:35850 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=
+2025/06/24 14:24:07 [INFO] index.go:57 访问首页 path=/
+2025/06/24 14:24:07 [INFO] logger.go:28 HTTP请求 method=GET path=/ query= status=200 duration=283.724µs ip=172.20.0.1:35850 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/
+2025/06/24 14:30:33 [INFO] logger.go:28 HTTP请求 method=GET path=/article/1.html query= status=200 duration=9.945454ms ip=172.20.0.1:57292 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/
+2025/06/24 14:30:34 [INFO] index.go:57 访问首页 path=/
+2025/06/24 14:30:34 [INFO] logger.go:28 HTTP请求 method=GET path=/ query= status=200 duration=370.765µs ip=172.20.0.1:57292 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/article/1.html
+2025/06/24 14:36:19 [INFO] main.go:97 正在关闭服务器...
+2025/06/24 14:36:20 [INFO] database.go:49 数据库连接成功 type=mysql host=mysql
+2025/06/24 14:36:20 [INFO] main.go:49 数据库连接成功 type=mysql host=mysql
+2025/06/24 14:36:20 [INFO] admin.go:323 默认管理员已存在，跳过初始化
+2025/06/24 14:36:20 [INFO] main.go:59 初始化缓存 type=memory
+2025/06/24 14:36:20 [INFO] main.go:62 使用内存缓存
+2025/06/24 14:36:20 [INFO] main.go:108 服务器启动 地址=0.0.0.0:8080
+2025/06/24 14:36:50 [INFO] index.go:57 访问首页 path=/
+2025/06/24 14:36:50 [INFO] logger.go:28 HTTP请求 method=GET path=/ query= status=200 duration=9.244025ms ip=172.20.0.1:36936 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/article/1.html
+2025/06/24 14:36:50 [INFO] index.go:57 访问首页 path=/
+2025/06/24 14:36:50 [INFO] logger.go:28 HTTP请求 method=GET path=/ query= status=200 duration=273.929µs ip=172.20.0.1:36936 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/article/1.html
+2025/06/24 14:36:51 [INFO] index.go:57 访问首页 path=/
+2025/06/24 14:36:51 [INFO] logger.go:28 HTTP请求 method=GET path=/ query= status=200 duration=260.935µs ip=172.20.0.1:36936 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/article/1.html
+2025/06/24 14:36:51 [INFO] index.go:57 访问首页 path=/
+2025/06/24 14:36:51 [INFO] logger.go:28 HTTP请求 method=GET path=/ query= status=200 duration=265.602µs ip=172.20.0.1:36936 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/article/1.html
+2025/06/24 14:36:59 [ERROR] article.go:63 获取文章详情失败 id=0 error=文章不存在
+2025/06/24 14:36:59 [INFO] logger.go:28 HTTP请求 method=GET path=/article/0.html query= status=404 duration=1.143954ms ip=172.20.0.1:36936 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/
+2025/06/24 14:37:07 [ERROR] article.go:63 获取文章详情失败 id=0 error=文章不存在
+2025/06/24 14:37:07 [INFO] logger.go:28 HTTP请求 method=GET path=/article/0.html query= status=404 duration=853.943µs ip=172.20.0.1:36936 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/
+2025/06/24 14:37:16 [INFO] index.go:57 访问首页 path=/
+2025/06/24 14:37:16 [INFO] logger.go:28 HTTP请求 method=GET path=/ query= status=200 duration=292.496µs ip=172.20.0.1:36936 user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 referer=http://127.0.0.1:8080/article/1.html
+2025/06/24 14:48:30 [INFO] main.go:97 正在关闭服务器...

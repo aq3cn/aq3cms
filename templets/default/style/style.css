@@ -1,0 +1,392 @@
+/* 全局样式 */
+body {
+    font-family: "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+a {
+    color: #337ab7;
+    text-decoration: none;
+}
+
+a:hover, a:focus {
+    color: #23527c;
+    text-decoration: underline;
+}
+
+.container {
+    max-width: 1200px;
+}
+
+.main-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* 头部样式 */
+.header {
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+    margin-bottom: 20px;
+}
+
+.logo {
+    padding: 5px 0;
+}
+
+.logo img {
+    max-height: 50px;
+}
+
+.navbar {
+    margin-bottom: 0;
+}
+
+.navbar-default {
+    background-color: transparent;
+    border: none;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #333;
+    font-size: 16px;
+    padding: 15px;
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus,
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #337ab7;
+    background-color: transparent;
+}
+
+/* 底部样式 */
+.footer {
+    background-color: #fff;
+    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px 0;
+    margin-top: 20px;
+}
+
+/* 面板样式 */
+.panel {
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.panel-default > .panel-heading {
+    background-color: #f8f8f8;
+    border-color: #e7e7e7;
+}
+
+.panel-title {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.panel-heading .more {
+    float: right;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+/* 焦点图样式 */
+.focus-box {
+    margin-bottom: 20px;
+}
+
+.carousel-caption {
+    background-color: rgba(0, 0, 0, 0.5);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 10px;
+    text-align: left;
+}
+
+.carousel-caption h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+/* 文章列表样式 */
+.article-list {
+    padding-left: 0;
+    list-style: none;
+    margin-bottom: 0;
+}
+
+.article-list li {
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+.article-list li:last-child {
+    border-bottom: none;
+}
+
+.media-list .media {
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.media-list .media:first-child {
+    padding-top: 0;
+}
+
+.media-list .media:last-child {
+    border-bottom: none;
+}
+
+.media-object {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.media-heading {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.article-meta {
+    color: #999;
+    margin-bottom: 10px;
+}
+
+.article-meta span {
+    margin-right: 15px;
+}
+
+.article-description {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* 文章详情样式 */
+.article-header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.article-title {
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.article-content {
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+.article-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+.article-description {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-left: 4px solid #337ab7;
+    color: #666;
+}
+
+.article-tags {
+    margin: 20px 0;
+}
+
+.article-tags a {
+    display: inline-block;
+    margin-right: 5px;
+    padding: 2px 8px;
+    background-color: #f5f5f5;
+    color: #666;
+    border-radius: 2px;
+}
+
+.article-tags a:hover {
+    background-color: #337ab7;
+    color: #fff;
+    text-decoration: none;
+}
+
+.article-nav {
+    margin: 20px 0;
+    padding: 15px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.article-related {
+    margin: 20px 0;
+}
+
+.article-related h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+/* 栏目页样式 */
+.category-header {
+    margin-bottom: 20px;
+}
+
+.category-title {
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.category-description {
+    color: #666;
+}
+
+.sub-categories {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+/* 标签样式 */
+.tag-cloud {
+    overflow: hidden;
+}
+
+.tag-item {
+    display: inline-block;
+    margin: 0 5px 5px 0;
+    padding: 2px 8px;
+    background-color: #f5f5f5;
+    color: #666;
+    border-radius: 2px;
+}
+
+.tag-item:hover {
+    background-color: #337ab7;
+    color: #fff;
+    text-decoration: none;
+}
+
+.tag-hot {
+    background-color: #f0ad4e;
+    color: #fff;
+}
+
+.tag-cloud-lg .tag-item {
+    margin: 0 8px 8px 0;
+    padding: 4px 10px;
+}
+
+/* 分页样式 */
+.pagination-box {
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* 评论样式 */
+.comment-list {
+    margin-bottom: 20px;
+}
+
+.comment-item {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.comment-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.comment-item .media-object {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.comment-content {
+    margin-bottom: 10px;
+}
+
+.comment-action {
+    color: #999;
+}
+
+.admin-reply {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+}
+
+.admin-reply .media-object {
+    width: 40px;
+    height: 40px;
+}
+
+.comment-form {
+    margin-top: 30px;
+}
+
+.comment-form h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+/* 搜索样式 */
+.search-form-box {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.search-result-box h3 {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.advanced-search-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* 响应式样式 */
+@media (max-width: 767px) {
+    .header {
+        padding: 10px 0;
+    }
+    
+    .logo {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    
+    .navbar-default .navbar-nav > li > a {
+        padding: 10px;
+    }
+    
+    .media-object {
+        width: 80px;
+        height: 60px;
+    }
+    
+    .article-title {
+        font-size: 20px;
+    }
+    
+    .article-content {
+        font-size: 14px;
+    }
+}

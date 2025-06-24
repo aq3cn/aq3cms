@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.PageTitle}} - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .toolbar { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .toolbar h2 { margin: 0; color: #2c3e50; }
+        .toolbar .actions { display: flex; gap: 10px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; transition: all 0.2s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-warning:hover { background: #e67e22; }
+        .category-table { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden; }
+        .table { width: 100%; border-collapse: collapse; }
+        .table th, .table td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        .table th { background: #f8f9fa; font-weight: bold; color: #2c3e50; }
+        .table tr:hover { background: #f8f9fa; }
+        .table .category-name { font-weight: bold; color: #2c3e50; }
+        .table .category-dir { font-family: monospace; background: #f1f2f6; padding: 2px 6px; border-radius: 3px; color: #666; }
+        .table .category-type { padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+        .table .category-type.article { background: #e8f5e8; color: #27ae60; }
+        .table .category-type.page { background: #e8f4fd; color: #3498db; }
+        .table .category-status { padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+        .table .category-status.normal { background: #e8f5e8; color: #27ae60; }
+        .table .category-status.hidden { background: #fdf2e8; color: #f39c12; }
+        .table .category-actions { display: flex; gap: 8px; }
+        .table .category-actions a { color: #3498db; text-decoration: none; font-size: 13px; padding: 4px 8px; border-radius: 3px; transition: all 0.2s; }
+        .table .category-actions a:hover { background: #3498db; color: white; }
+        .table .category-actions a.delete { color: #e74c3c; }
+        .table .category-actions a.delete:hover { background: #e74c3c; color: white; }
+        .category-level-0 { }
+        .category-level-1 { padding-left: 30px; }
+        .category-level-1 .category-name::before { content: "└─ "; color: #999; }
+        .category-level-2 { padding-left: 60px; }
+        .category-level-2 .category-name::before { content: "　└─ "; color: #999; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #666; }
+        .empty-state .icon { font-size: 48px; margin-bottom: 15px; }
+        .empty-state h3 { margin: 0 0 10px 0; color: #2c3e50; }
+        .empty-state p { margin: 0 0 20px 0; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-item { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+        .stat-item .number { font-size: 24px; font-weight: bold; color: #3498db; margin-bottom: 5px; }
+        .stat-item .label { color: #666; font-size: 14px; }
+        @media (max-width: 768px) {
+            .toolbar { flex-direction: column; gap: 15px; align-items: stretch; }
+            .toolbar .actions { justify-content: center; }
+            .table { font-size: 14px; }
+            .table th, .table td { padding: 10px; }
+            .category-level-1 { padding-left: 20px; }
+            .category-level-2 { padding-left: 40px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📂 栏目列表</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/aq3cms/category">栏目管理</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <a href="/aq3cms/category">栏目管理</a>
+            <span>></span>
+            <span>栏目列表</span>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="number">{{len .Categories}}</div>
+                <div class="label">栏目总数</div>
+            </div>
+            <div class="stat-item">
+                <div class="number">{{range .Categories}}{{if eq .ParentID 0}}1{{end}}{{end}}</div>
+                <div class="label">顶级栏目</div>
+            </div>
+            <div class="stat-item">
+                <div class="number">{{range .Categories}}{{.ArticleCount}}{{end}}</div>
+                <div class="label">文章总数</div>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <h2>栏目列表管理</h2>
+            <div class="actions">
+                <a href="/aq3cms/category_add" class="btn btn-success">➕ 添加栏目</a>
+                <a href="/aq3cms/category" class="btn btn-primary">📊 栏目概览</a>
+                <button class="btn btn-warning" onclick="refreshList()">🔄 刷新列表</button>
+            </div>
+        </div>
+
+        <div class="category-table">
+            {{if .CategoryTree}}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>栏目名称</th>
+                        <th>目录</th>
+                        <th>类型</th>
+                        <th>状态</th>
+                        <th>文章数</th>
+                        <th>排序</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .CategoryTree}}
+                    <tr class="category-level-0">
+                        <td>
+                            <div class="category-name">{{.TypeName}}</div>
+                        </td>
+                        <td>
+                            <span class="category-dir">{{.TypeDir}}</span>
+                        </td>
+                        <td>
+                            {{if eq .ChannelType 1}}
+                            <span class="category-type article">文章栏目</span>
+                            {{else}}
+                            <span class="category-type page">单页栏目</span>
+                            {{end}}
+                        </td>
+                        <td>
+                            {{if eq .IsHidden 0}}
+                            <span class="category-status normal">正常</span>
+                            {{else}}
+                            <span class="category-status hidden">隐藏</span>
+                            {{end}}
+                        </td>
+                        <td>{{.ArticleCount}}</td>
+                        <td>{{.SortRank}}</td>
+                        <td>
+                            <div class="category-actions">
+                                <a href="/aq3cms/category_edit/{{.ID}}">编辑</a>
+                                <a href="/list/{{.ID}}.html" target="_blank">查看</a>
+                                <a href="/aq3cms/category_delete/{{.ID}}" class="delete" onclick="return confirm('确定要删除这个栏目吗？')">删除</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{if .Children}}
+                    {{range .Children}}
+                    <tr class="category-level-1">
+                        <td>
+                            <div class="category-name">{{.TypeName}}</div>
+                        </td>
+                        <td>
+                            <span class="category-dir">{{.TypeDir}}</span>
+                        </td>
+                        <td>
+                            {{if eq .ChannelType 1}}
+                            <span class="category-type article">文章栏目</span>
+                            {{else}}
+                            <span class="category-type page">单页栏目</span>
+                            {{end}}
+                        </td>
+                        <td>
+                            {{if eq .IsHidden 0}}
+                            <span class="category-status normal">正常</span>
+                            {{else}}
+                            <span class="category-status hidden">隐藏</span>
+                            {{end}}
+                        </td>
+                        <td>{{.ArticleCount}}</td>
+                        <td>{{.SortRank}}</td>
+                        <td>
+                            <div class="category-actions">
+                                <a href="/aq3cms/category_edit/{{.ID}}">编辑</a>
+                                <a href="/list/{{.ID}}.html" target="_blank">查看</a>
+                                <a href="/aq3cms/category_delete/{{.ID}}" class="delete" onclick="return confirm('确定要删除这个栏目吗？')">删除</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{if .Children}}
+                    {{range .Children}}
+                    <tr class="category-level-2">
+                        <td>
+                            <div class="category-name">{{.TypeName}}</div>
+                        </td>
+                        <td>
+                            <span class="category-dir">{{.TypeDir}}</span>
+                        </td>
+                        <td>
+                            {{if eq .ChannelType 1}}
+                            <span class="category-type article">文章栏目</span>
+                            {{else}}
+                            <span class="category-type page">单页栏目</span>
+                            {{end}}
+                        </td>
+                        <td>
+                            {{if eq .IsHidden 0}}
+                            <span class="category-status normal">正常</span>
+                            {{else}}
+                            <span class="category-status hidden">隐藏</span>
+                            {{end}}
+                        </td>
+                        <td>{{.ArticleCount}}</td>
+                        <td>{{.SortRank}}</td>
+                        <td>
+                            <div class="category-actions">
+                                <a href="/aq3cms/category_edit/{{.ID}}">编辑</a>
+                                <a href="/list/{{.ID}}.html" target="_blank">查看</a>
+                                <a href="/aq3cms/category_delete/{{.ID}}" class="delete" onclick="return confirm('确定要删除这个栏目吗？')">删除</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{end}}
+                    {{end}}
+                    {{end}}
+                    {{end}}
+                    {{end}}
+                </tbody>
+            </table>
+            {{else}}
+            <div class="empty-state">
+                <div class="icon">📂</div>
+                <h3>暂无栏目</h3>
+                <p>还没有创建任何栏目，点击下面的按钮开始创建第一个栏目。</p>
+                <a href="/aq3cms/category_add" class="btn btn-success">➕ 创建栏目</a>
+            </div>
+            {{end}}
+        </div>
+    </div>
+
+    <script>
+        function refreshList() {
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>

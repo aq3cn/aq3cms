@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <meta name="keywords" content="{{.Keywords}}">
+    <meta name="description" content="{{.Description}}">
+    <style>
+        /* 参考 index.htm 的样式风格 */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .site-info { display: flex; align-items: center; gap: 15px; }
+        .header .site-info a { color: white; text-decoration: none; }
+        .header .site-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+
+        /* 栏目信息卡片 */
+        .category-info { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .category-info h1 { margin: 0 0 15px 0; color: #2c3e50; display: flex; align-items: center; gap: 10px; }
+        .category-info .description { color: #666; line-height: 1.6; margin-bottom: 15px; }
+        .category-stats { display: flex; gap: 20px; }
+        .category-stats .stat { color: #999; font-size: 14px; }
+
+        /* 子栏目导航 */
+        .sub-categories { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .sub-categories h3 { margin: 0 0 15px 0; color: #2c3e50; }
+        .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; }
+        .sub-nav a { padding: 8px 16px; background: #f8f9fa; color: #666; text-decoration: none; border-radius: 20px; font-size: 14px; transition: all 0.2s; }
+        .sub-nav a:hover { background: #3498db; color: white; }
+        .sub-nav a.active { background: #3498db; color: white; }
+
+        /* 两列布局 */
+        .two-column { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+
+        /* 文章列表样式 */
+        .article-list { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .article-list h3 { margin: 0; padding: 20px; border-bottom: 1px solid #eee; color: #2c3e50; }
+        .article-list-content { padding: 20px; }
+        .article-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; transition: background 0.2s; }
+        .article-item:hover { background: #f8f9fa; }
+        .article-item:last-child { border-bottom: none; }
+        .article-icon { width: 40px; height: 40px; border-radius: 50%; background: #3498db; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px; }
+        .article-info { flex: 1; }
+        .article-title { font-weight: bold; color: #2c3e50; margin-bottom: 5px; }
+        .article-title a { color: #2c3e50; text-decoration: none; }
+        .article-title a:hover { color: #3498db; }
+        .article-meta { color: #666; font-size: 14px; }
+        .article-date { color: #999; font-size: 12px; }
+
+        /* 分页样式 */
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 10px; padding: 20px; border-top: 1px solid #eee; }
+        .pagination a, .pagination span { padding: 8px 12px; border: 1px solid #ddd; text-decoration: none; color: #666; border-radius: 4px; }
+        .pagination a:hover { background: #3498db; color: white; border-color: #3498db; }
+        .pagination .current { background: #3498db; color: white; border-color: #3498db; }
+        .pagination .disabled { color: #ccc; cursor: not-allowed; }
+
+        /* 侧边栏样式 */
+        .sidebar-card { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .sidebar-card h3 { margin: 0; padding: 20px; border-bottom: 1px solid #eee; color: #2c3e50; }
+        .sidebar-card .content { padding: 20px; }
+
+        /* 按钮样式 */
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; transition: all 0.2s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+
+        /* 空状态 */
+        .empty-state { padding: 40px 20px; text-align: center; color: #666; }
+        .empty-state .icon { font-size: 64px; margin-bottom: 15px; opacity: 0.5; }
+
+        /* 页脚样式 */
+        .footer { background: #2c3e50; color: white; padding: 30px 0; margin-top: 40px; }
+        .footer p { margin: 5px 0; }
+        .footer a { color: #3498db; }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .two-column { grid-template-columns: 1fr; }
+            .header { flex-direction: column; gap: 10px; text-align: center; }
+            .category-stats { flex-direction: column; gap: 10px; }
+            .sub-nav { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏠 {{.SiteName}}</h1>
+        <div class="site-info">
+            <a href="/">返回首页</a>
+            <a href="/aq3cms/login">管理后台</a>
+            <a href="/search">搜索</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/">网站首页</a>
+            <span>></span>
+            <span>{{.Category.TypeName}}</span>
+        </div>
+
+        <!-- 栏目信息 -->
+        <div class="category-info">
+            <h1>📁 {{.Category.TypeName}}</h1>
+            {{if .Category.Description}}
+            <div class="description">{{.Category.Description}}</div>
+            {{end}}
+            <div class="category-stats">
+                <span class="stat">栏目ID: {{.Category.ID}}</span>
+                <span class="stat">文章总数: {{.Pagination.TotalItems}}</span>
+                <span class="stat">当前第 {{.Pagination.CurrentPage}} 页</span>
+            </div>
+        </div>
+
+        <!-- 子栏目导航 -->
+        {{if .SubCategories}}
+        <div class="sub-categories">
+            <h3>📂 子栏目</h3>
+            <div class="sub-nav">
+                {{range .SubCategories}}
+                <a href="/{{.TypeDir}}">{{.TypeName}}</a>
+                {{end}}
+            </div>
+        </div>
+        {{end}}
+        <!-- 两列布局：文章列表和侧边栏 -->
+        <div class="two-column">
+            <div class="article-list">
+                <h3>📰 {{.Category.TypeName}} - 文章列表</h3>
+                <div class="article-list-content">
+                    {{if .Articles}}
+                    {{range .Articles}}
+                    <div class="article-item">
+                        <div class="article-icon">📄</div>
+                        <div class="article-info">
+                            <div class="article-title">
+                                <a href="/article/{{.ID}}.html">{{.Title}}</a>
+                            </div>
+                            <div class="article-meta">作者：{{.Writer}} • 点击：{{.Click}} 次</div>
+                        </div>
+                        <div class="article-date">{{.PubDate}}</div>
+                    </div>
+                    {{end}}
+                    {{else}}
+                    <div class="empty-state">
+                        <div class="icon">📭</div>
+                        <p>暂无文章内容</p>
+                        <p>该栏目下还没有发布任何文章</p>
+                    </div>
+                    {{end}}
+                </div>
+
+                <!-- 分页 -->
+                {{if gt .Pagination.TotalPages 1}}
+                <div class="pagination">
+                    {{if .Pagination.HasPrev}}
+                    <a href="?page={{.Pagination.PrevPage}}">« 上一页</a>
+                    {{else}}
+                    <span class="disabled">« 上一页</span>
+                    {{end}}
+
+                    <span class="current">{{.Pagination.CurrentPage}}</span>
+                    <span>/ {{.Pagination.TotalPages}}</span>
+
+                    {{if .Pagination.HasNext}}
+                    <a href="?page={{.Pagination.NextPage}}">下一页 »</a>
+                    {{else}}
+                    <span class="disabled">下一页 »</span>
+                    {{end}}
+                </div>
+                {{end}}
+            </div>
+            <!-- 侧边栏 -->
+            <div>
+                <!-- 栏目信息 -->
+                <div class="sidebar-card">
+                    <h3>ℹ️ 栏目信息</h3>
+                    <div class="content">
+                        <p><strong>栏目名称：</strong>{{.Category.TypeName}}</p>
+                        <p><strong>栏目目录：</strong>{{.Category.TypeDir}}</p>
+                        <p><strong>文章数量：</strong>{{.Pagination.TotalItems}} 篇</p>
+                        <p><strong>排序权重：</strong>{{.Category.SortRank}}</p>
+                        <hr>
+                        <p><a href="/" class="btn btn-primary">返回首页</a></p>
+                    </div>
+                </div>
+
+                <!-- 最新文章 -->
+                <div class="sidebar-card">
+                    <h3>🔥 最新文章</h3>
+                    <div class="content">
+                        {{if .Articles}}
+                        {{range $index, $article := .Articles}}
+                        {{if lt $index 5}}
+                        <div class="article-item">
+                            <div class="article-icon">🔥</div>
+                            <div class="article-info">
+                                <div class="article-title">
+                                    <a href="/article/{{.ID}}.html">{{.Title}}</a>
+                                </div>
+                                <div class="article-meta">{{.PubDate}}</div>
+                            </div>
+                        </div>
+                        {{end}}
+                        {{end}}
+                        {{else}}
+                        <p style="color: #666; text-align: center;">暂无文章</p>
+                        {{end}}
+                    </div>
+                </div>
+
+                <!-- 相关栏目 -->
+                {{if .SubCategories}}
+                <div class="sidebar-card">
+                    <h3>📁 相关栏目</h3>
+                    <div class="content">
+                        {{range .SubCategories}}
+                        <div style="padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
+                            <a href="/{{.TypeDir}}" style="color: #666; text-decoration: none;">{{.TypeName}}</a>
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <p>{{.CopyRight}}</p>
+                    <p>站点地址: <a href="{{.SiteURL}}">{{.SiteURL}}</a></p>
+                </div>
+                <div style="text-align: right;">
+                    <p>Powered by <a href="/">aq3cms</a> | Go 语言驱动</p>
+                    <p>系统版本: {{.Version}} | 当前时间: {{.CurrentTime}}</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

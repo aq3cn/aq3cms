@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.PageTitle}} - aq3cms管理系统</title>
+    <link rel="stylesheet" href="/static/admin/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/admin/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/admin/css/adminlte.min.css">
+    <link rel="stylesheet" href="/static/admin/css/custom.css">
+    <script src="/static/admin/js/jquery.min.js"></script>
+    <script src="/static/admin/js/bootstrap.min.js"></script>
+    <script src="/static/admin/js/adminlte.min.js"></script>
+    <script src="/static/admin/js/echarts.min.js"></script>
+</head>
+
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <!-- 顶部导航栏 -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- 左侧导航切换按钮 -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fa fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="/aq3cms/" class="nav-link">首页</a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="/" target="_blank" class="nav-link">网站首页</a>
+                </li>
+            </ul>
+
+            <!-- 右侧导航栏 -->
+            <ul class="navbar-nav ml-auto">
+                <!-- 消息通知 -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="fa fa-bell"></i>
+                        <span class="badge badge-warning navbar-badge">15</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-item dropdown-header">15 条通知</span>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fa fa-envelope mr-2"></i> 4 条新评论
+                            <span class="float-right text-muted text-sm">3 分钟前</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fa fa-users mr-2"></i> 8 条新会员注册
+                            <span class="float-right text-muted text-sm">12 小时前</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fa fa-file mr-2"></i> 3 条新文章
+                            <span class="float-right text-muted text-sm">2 天前</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item dropdown-footer">查看所有通知</a>
+                    </div>
+                </li>
+                <!-- 用户信息 -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user"></i> {{.AdminName}}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <a href="/aq3cms/admin_info" class="dropdown-item">
+                            <i class="fa fa-user mr-2"></i> 个人信息
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/aq3cms/admin_password" class="dropdown-item">
+                            <i class="fa fa-lock mr-2"></i> 修改密码
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/aq3cms/logout" class="dropdown-item">
+                            <i class="fa fa-sign-out mr-2"></i> 退出登录
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 左侧菜单栏 -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Logo -->
+            <a href="/aq3cms/" class="brand-link">
+                <img src="/static/admin/img/logo.png" alt="aq3cms Logo" class="brand-image img-circle elevation-3"
+                    style="opacity: .8">
+                <span class="brand-text font-weight-light">aq3cms 管理系统</span>
+            </a>
+
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <!-- 用户面板 -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="/static/admin/img/user.jpg" class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info">
+                        <a href="#" class="d-block">{{.AdminName}}</a>
+                    </div>
+                </div>
+
+                <!-- 侧边栏菜单 -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                        data-accordion="false">
+                        <li class="nav-item">
+                            <a href="/aq3cms/" class="nav-link active">
+                                <i class="nav-icon fa fa-dashboard"></i>
+                                <p>控制面板</p>
+                            </a>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fa fa-file-text"></i>
+                                <p>
+                                    内容管理
+                                    <i class="fa fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/aq3cms/article_list" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>文章管理</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/aq3cms/category_list" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>栏目管理</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/aq3cms/comment_list" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>评论管理</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fa fa-users"></i>
+                                <p>
+                                    用户管理
+                                    <i class="fa fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/aq3cms/member_list" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>会员管理</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/aq3cms/admin_list" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>管理员管理</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fa fa-cog"></i>
+                                <p>
+                                    系统设置
+                                    <i class="fa fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/aq3cms/system_config" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>系统配置</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/aq3cms/system_database" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>数据库管理</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/aq3cms/system_cache" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>缓存管理</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/aq3cms/system_log" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>日志管理</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fa fa-code"></i>
+                                <p>
+                                    模板管理
+                                    <i class="fa fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/aq3cms/template_list" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>模板列表</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/aq3cms/template_create" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>创建模板</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fa fa-html5"></i>
+                                <p>
+                                    静态页面
+                                    <i class="fa fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/aq3cms/html_index" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>生成首页</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/aq3cms/html_list" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>生成栏目页</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/aq3cms/html_article" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>生成文章页</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/aq3cms/html_all" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>生成全站</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fa fa-plug"></i>
+                                <p>
+                                    插件管理
+                                    <i class="fa fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="/aq3cms/plugin_list" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>插件列表</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/aq3cms/plugin_upload" class="nav-link">
+                                        <i class="fa fa-circle-o nav-icon"></i>
+                                        <p>上传插件</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- 内容区域 -->
+        <div class="content-wrapper">
+            <!-- 内容头部 -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0 text-dark">控制面板</h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="/aq3cms/">首页</a></li>
+                                <li class="breadcrumb-item active">控制面板</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主要内容 -->
+            <section class="content">
+                <div class="container-fluid">
+                    <!-- 统计信息 -->
+                    <div class="row">
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3>{{.ArticleCount}}</h3>
+                                    <p>文章数量</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-file-text"></i>
+                                </div>
+                                <a href="/aq3cms/article_list" class="small-box-footer">
+                                    更多信息 <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3>{{.CategoryCount}}</h3>
+                                    <p>栏目数量</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-folder"></i>
+                                </div>
+                                <a href="/aq3cms/category_list" class="small-box-footer">
+                                    更多信息 <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-warning">
+                                <div class="inner">
+                                    <h3>{{.MemberCount}}</h3>
+                                    <p>会员数量</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-users"></i>
+                                </div>
+                                <a href="/aq3cms/member_list" class="small-box-footer">
+                                    更多信息 <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-danger">
+                                <div class="inner">
+                                    <h3>{{.CommentCount}}</h3>
+                                    <p>评论数量</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-comments"></i>
+                                </div>
+                                <a href="/aq3cms/comment_list" class="small-box-footer">
+                                    更多信息 <i class="fa fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 图表和列表 -->
+                    <div class="row">
+                        <!-- 左侧图表 -->
+                        <div class="col-md-8">
+                            <!-- 访问统计图表 -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fa fa-bar-chart"></i>
+                                        访问统计
+                                    </h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="visit-chart" style="height: 300px;"></div>
+                                </div>
+                            </div>
+
+                            <!-- 最新文章 -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fa fa-file-text"></i>
+                                        最新文章
+                                    </h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>标题</th>
+                                                <th>栏目</th>
+                                                <th>发布时间</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {{range .LatestArticles}}
+                                            <tr>
+                                                <td>{{.ID}}</td>
+                                                <td>{{.Title}}</td>
+                                                <td>{{.TypeName}}</td>
+                                                <td>{{.PubDate}}</td>
+                                                <td>
+                                                    <a href="/aq3cms/article_edit/{{.ID}}" class="btn btn-xs btn-primary">
+                                                        <i class="fa fa-edit"></i> 编辑
+                                                    </a>
+                                                    <a href="/article/{{.ID}}.html" target="_blank"
+                                                        class="btn btn-xs btn-info">
+                                                        <i class="fa fa-eye"></i> 查看
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {{end}}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 右侧信息 -->
+                        <div class="col-md-4">
+                            <!-- 系统信息 -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fa fa-server"></i>
+                                        系统信息
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td>Go版本</td>
+                                            <td>{{.SystemInfo.GoVersion}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>CPU核心数</td>
+                                            <td>{{.SystemInfo.NumCPU}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>操作系统</td>
+                                            <td>{{.SystemInfo.GOOS}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>系统架构</td>
+                                            <td>{{.SystemInfo.GOARCH}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>服务器时间</td>
+                                            <td>{{.SystemInfo.ServerTime}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>运行时间</td>
+                                            <td>{{.SystemInfo.ServerUptime}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- 最新评论 -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fa fa-comments"></i>
+                                        最新评论
+                                    </h3>
+                                </div>
+                                <div class="card-body p-0">
+                                    <ul class="products-list product-list-in-card pl-2 pr-2">
+                                        {{range .LatestComments}}
+                                        <li class="item">
+                                            <div class="product-img">
+                                                <img src="/static/admin/img/user.jpg" alt="User Image"
+                                                    class="img-size-50">
+                                            </div>
+                                            <div class="product-info">
+                                                <a href="/aq3cms/comment_detail/{{.ID}}" class="product-title">
+                                                    {{.Username}}
+                                                    <span class="badge badge-info float-right">{{.DTime}}</span>
+                                                </a>
+                                                <span class="product-description">
+                                                    {{.Msg}}
+                                                </span>
+                                            </div>
+                                        </li>
+                                        {{end}}
+                                    </ul>
+                                </div>
+                                <div class="card-footer text-center">
+                                    <a href="/aq3cms/comment_list" class="uppercase">查看所有评论</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- 底部 -->
+        <footer class="main-footer">
+            <div class="float-right d-none d-sm-block">
+                <b>Version</b> 1.0.0
+            </div>
+            <strong>Copyright &copy; 2023-2024 <a href="https://aq3cms">aq3cms</a>.</strong> All rights reserved.
+        </footer>
+    </div>
+
+    <script>
+        // 初始化访问统计图表
+        $(function () {
+            var visitChart = echarts.init(document.getElementById('visit-chart'));
+
+            var option = {
+                title: {
+                    text: '最近7天访问统计'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['访问量', '独立访客', '新访客']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name: '访问量',
+                        type: 'line',
+                        data: [120, 132, 101, 134, 90, 230, 210]
+                    },
+                    {
+                        name: '独立访客',
+                        type: 'line',
+                        data: [80, 92, 71, 84, 60, 130, 110]
+                    },
+                    {
+                        name: '新访客',
+                        type: 'line',
+                        data: [30, 42, 31, 34, 20, 50, 40]
+                    }
+                ]
+            };
+
+            visitChart.setOption(option);
+
+            // 窗口大小变化时重绘图表
+            window.addEventListener('resize', function () {
+                visitChart.resize();
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,65 @@
+<!--
+ * @Author: xxx@xxx.com
+ * @Date: 2025-05-01 19:37:30
+ * @LastEditors: xxx@xxx.com
+ * @LastEditTime: 2025-05-01 19:54:54
+ * @FilePath: \aq3cms\aq3cms\templets\default\head.htm
+ * @Description: 
+ * 
+ * Copyright (c) 2022 by xxx@xxx.com, All Rights Reserved. 
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{aq3cms:global.pagename/} - {aq3cms:global.cfg_webname/}</title>
+    <meta name="keywords" content="{aq3cms:global.keywords/}">
+    <meta name="description" content="{aq3cms:global.description/}">
+    <link rel="stylesheet" href="{aq3cms:global.cfg_templets_skin/}/style/bootstrap.min.css">
+    <link rel="stylesheet" href="{aq3cms:global.cfg_templets_skin/}/style/style.css">
+    <script src="{aq3cms:global.cfg_templets_skin/}/js/jquery.min.js"></script>
+    <script src="{aq3cms:global.cfg_templets_skin/}/js/bootstrap.min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="{aq3cms:global.cfg_templets_skin/}/js/html5shiv.min.js"></script>
+    <script src="{aq3cms:global.cfg_templets_skin/}/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<header class="header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 logo">
+                <a href="/">
+                    <img src="{aq3cms:global.cfg_templets_skin/}/images/logo.png" alt="{aq3cms:global.cfg_webname/}">
+                </a>
+            </div>
+            <div class="col-md-9">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">切换导航</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a href="/">首页</a></li>
+                            {aq3cms:channel type='top' row='10'}
+                            <li><a href="[field:typeurl/]">[field:typename/]</a></li>
+                            {/aq3cms:channel}
+                        </ul>
+                        <form class="navbar-form navbar-right" role="search" action="/search" method="get">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="keyword" placeholder="搜索">
+                            </div>
+                            <button type="submit" class="btn btn-default">搜索</button>
+                        </form>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>

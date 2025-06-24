@@ -1,0 +1,36 @@
+# 开发环境 Dockerfile
+FROM golang:1.23-alpine
+RUN echo "https://mirrors.aliyun.com/alpine/v3.21/main" > /etc/apk/repositories && echo "https://mirrors.aliyun.com/alpine/v3.21/community" >> /etc/apk/repositories
+
+# 安装必要的包
+RUN apk add --no-cache git ca-certificates tzdata gcc musl-dev
+
+# 设置时区
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+# 安装 Air (热重载工具)
+RUN go install github.com/cosmtrek/air@latest
+
+# 安装 Delve (调试工具)
+RUN go install github.com/go-delve/delve/cmd/dlv@latest
+
+# 设置工作目录
+WORKDIR /app
+
+# 复制 go mod 文件
+COPY go.mod go.sum ./
+
+# 下载依赖
+RUN go mod download
+
+# 复制源代码
+COPY . .
+
+# 创建必要的目录
+RUN mkdir -p uploads logs data
+
+# 暴露端口
+EXPOSE 8080 2345
+
+# 启动命令 (由 docker-compose 覆盖)
+CMD ["air", "-c", ".air.toml"]

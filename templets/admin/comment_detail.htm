@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>评论详情 - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .comment-detail { background: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .comment-detail h3 { margin: 0 0 20px 0; color: #2c3e50; }
+        .comment-meta { background: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .comment-content { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; margin-bottom: 20px; line-height: 1.6; }
+        .comment-status { padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; }
+        .comment-status.pending { background: #fff3cd; color: #856404; }
+        .comment-status.approved { background: #d4edda; color: #155724; }
+        .comment-status.rejected { background: #f8d7da; color: #721c24; }
+        .info-item { display: flex; margin-bottom: 10px; }
+        .info-label { font-weight: 600; width: 100px; color: #2c3e50; }
+        .info-value { flex: 1; color: #2c3e50; }
+        .article-info { background: #e3f2fd; border-radius: 8px; padding: 15px; margin-bottom: 20px; }
+        .action-buttons { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 20px; }
+        .action-buttons h3 { margin: 0 0 20px 0; color: #2c3e50; }
+        .action-buttons .actions { display: flex; flex-direction: column; gap: 10px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; transition: all 0.2s; text-align: center; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-warning:hover { background: #e67e22; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-info:hover { background: #138496; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #5a6268; }
+        .two-column { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .stats-card { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 20px; text-align: center; }
+        .stats-card h3 { margin: 0 0 15px 0; color: #2c3e50; }
+        .stats-row { display: flex; justify-content: space-around; }
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 24px; font-weight: bold; margin-bottom: 5px; }
+        .stat-label { color: #666; font-size: 14px; }
+        .stat-number.success { color: #27ae60; }
+        .stat-number.danger { color: #e74c3c; }
+        @media (max-width: 768px) {
+            .two-column { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>💬 评论详情</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/">查看网站</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <a href="/aq3cms/comment">评论管理</a>
+            <span>></span>
+            <a href="/aq3cms/comment_list">评论列表</a>
+            <span>></span>
+            <span>评论详情</span>
+        </div>
+
+        <div class="two-column">
+            <div class="comment-detail">
+                <h3>💬 评论信息</h3>
+
+                <!-- 评论元信息 -->
+                <div class="comment-meta">
+                    <div class="info-item">
+                        <div class="info-label">评论ID:</div>
+                        <div class="info-value">{{.Comment.ID}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">用户名:</div>
+                        <div class="info-value">{{.Comment.Username}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">IP地址:</div>
+                        <div class="info-value">{{.Comment.IP}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">评论时间:</div>
+                        <div class="info-value">{{.Comment.Dtime.Format "2006-01-02 15:04:05"}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">审核状态:</div>
+                        <div class="info-value">
+                            {{if eq .Comment.IsCheck 0}}
+                                <span class="comment-status pending">⏰ 待审核</span>
+                            {{else if eq .Comment.IsCheck 1}}
+                                <span class="comment-status approved">✅ 已审核</span>
+                            {{else}}
+                                <span class="comment-status rejected">❌ 已拒绝</span>
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">会员ID:</div>
+                        <div class="info-value">
+                            {{if .Comment.MID}}
+                                <a href="/aq3cms/member_edit/{{.Comment.MID}}" style="color: #3498db; text-decoration: none;">
+                                    {{.Comment.MID}}
+                                </a>
+                            {{else}}
+                                游客
+                            {{end}}
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">点赞统计:</div>
+                        <div class="info-value">
+                            👍 {{.Comment.GoodCount}} / 👎 {{.Comment.BadCount}}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 评论内容 -->
+                <h4>📝 评论内容</h4>
+                <div class="comment-content">
+                    {{.Comment.Content}}
+                </div>
+
+                <!-- 相关文章信息 -->
+                {{if .Article}}
+                <div class="article-info">
+                    <h4>📄 相关文章</h4>
+                    <div class="info-item">
+                        <div class="info-label">文章ID:</div>
+                        <div class="info-value">{{.Article.ID}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">文章标题:</div>
+                        <div class="info-value">
+                            <a href="/article/{{.Article.ID}}.html" target="_blank" style="color: #3498db; text-decoration: none;">
+                                {{.Article.Title}}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">发布时间:</div>
+                        <div class="info-value">{{.Article.PubDate.Format "2006-01-02 15:04:05"}}</div>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+
+            <div>
+                <!-- 操作按钮 -->
+                <div class="action-buttons">
+                    <h3>⚙️ 操作</h3>
+
+                    <div class="actions">
+                        {{if eq .Comment.IsCheck 0}}
+                            <a href="/aq3cms/comment_approve/{{.Comment.ID}}" class="btn btn-success">✅ 审核通过</a>
+                            <a href="/aq3cms/comment_reject/{{.Comment.ID}}" class="btn btn-warning">❌ 拒绝评论</a>
+                        {{else if eq .Comment.IsCheck 1}}
+                            <a href="/aq3cms/comment_reject/{{.Comment.ID}}" class="btn btn-warning">❌ 取消审核</a>
+                        {{else}}
+                            <a href="/aq3cms/comment_approve/{{.Comment.ID}}" class="btn btn-success">✅ 重新审核</a>
+                        {{end}}
+
+                        <a href="/aq3cms/comment_delete/{{.Comment.ID}}" class="btn btn-danger"
+                           onclick="return confirm('确定要删除这条评论吗？此操作不可恢复！')">🗑️ 删除评论</a>
+
+                        <a href="/aq3cms/comment_list" class="btn btn-secondary">📝 返回列表</a>
+
+                        {{if .Article}}
+                        <a href="/article/{{.Article.ID}}.html" target="_blank" class="btn btn-info">👁️ 查看文章</a>
+                        {{end}}
+                    </div>
+                </div>
+
+                <!-- 统计信息 -->
+                <div class="stats-card">
+                    <h3>📊 统计信息</h3>
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <div class="stat-number success">{{.Comment.GoodCount}}</div>
+                            <div class="stat-label">点赞</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number danger">{{.Comment.BadCount}}</div>
+                            <div class="stat-label">踩</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

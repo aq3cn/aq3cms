@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.PageTitle}} - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .form-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .form-container h2 { margin: 0 0 30px 0; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #2c3e50; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; box-sizing: border-box; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #3498db; box-shadow: 0 0 5px rgba(52, 152, 219, 0.3); }
+        .form-group textarea { min-height: 120px; resize: vertical; }
+        .form-group .editor { min-height: 300px; }
+        .form-row { display: flex; gap: 20px; }
+        .form-row .form-group { flex: 1; }
+        .checkbox-group { display: flex; gap: 20px; align-items: center; }
+        .checkbox-group label { display: flex; align-items: center; gap: 5px; font-weight: normal; margin-bottom: 0; }
+        .checkbox-group input[type="checkbox"] { width: auto; margin: 0; }
+        .btn { padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; transition: all 0.2s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-secondary { background: #95a5a6; color: white; margin-left: 10px; }
+        .btn-secondary:hover { background: #7f8c8d; }
+        .form-actions { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: right; }
+        .upload-area { border: 2px dashed #ddd; padding: 20px; text-align: center; border-radius: 5px; background: #fafafa; }
+        .upload-area:hover { border-color: #3498db; background: #f0f8ff; }
+        .upload-area input[type="file"] { display: none; }
+        .upload-btn { background: #3498db; color: white; padding: 8px 16px; border-radius: 3px; cursor: pointer; display: inline-block; }
+        .upload-btn:hover { background: #2980b9; }
+        .help-text { font-size: 12px; color: #666; margin-top: 5px; }
+        @media (max-width: 768px) {
+            .form-row { flex-direction: column; gap: 0; }
+            .checkbox-group { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📝 {{.PageTitle}}</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/aq3cms/article">文章管理</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <a href="/aq3cms/article">文章管理</a>
+            <span>></span>
+            <span>添加文章</span>
+        </div>
+
+        <div class="form-container">
+            <h2>📝 添加新文章</h2>
+            
+            <form action="/aq3cms/article_add" method="post" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="title">文章标题 *</label>
+                        <input type="text" id="title" name="title" required placeholder="请输入文章标题">
+                    </div>
+                    <div class="form-group">
+                        <label for="short_title">简短标题</label>
+                        <input type="text" id="short_title" name="short_title" placeholder="用于导航显示的简短标题">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="typeid">所属栏目 *</label>
+                        <select id="typeid" name="typeid" required>
+                            <option value="">请选择栏目</option>
+                            {{range .Categories}}
+                            <option value="{{.ID}}">{{.TypeName}}</option>
+                            {{end}}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="writer">作者</label>
+                        <input type="text" id="writer" name="writer" value="{{.AdminName}}" placeholder="文章作者">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="source">来源</label>
+                        <input type="text" id="source" name="source" placeholder="文章来源">
+                    </div>
+                    <div class="form-group">
+                        <label for="color">标题颜色</label>
+                        <input type="color" id="color" name="color" value="#000000">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="keywords">关键词</label>
+                    <input type="text" id="keywords" name="keywords" placeholder="多个关键词用逗号分隔">
+                    <div class="help-text">用于SEO优化，多个关键词请用英文逗号分隔</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">文章摘要</label>
+                    <textarea id="description" name="description" placeholder="文章简要描述，用于搜索引擎和文章列表显示"></textarea>
+                    <div class="help-text">建议控制在150字以内</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="litpic">缩略图</label>
+                    <div class="upload-area">
+                        <input type="file" id="litpic_upload" name="litpic_upload" accept="image/*">
+                        <label for="litpic_upload" class="upload-btn">选择图片</label>
+                        <p>或者直接输入图片URL：</p>
+                        <input type="text" id="litpic" name="litpic" placeholder="http://example.com/image.jpg">
+                    </div>
+                    <div class="help-text">支持jpg、png、gif格式，建议尺寸300x200像素</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="filename">自定义文件名</label>
+                    <input type="text" id="filename" name="filename" placeholder="不填写将自动生成">
+                    <div class="help-text">用于生成静态页面的文件名，不包含扩展名</div>
+                </div>
+
+                <div class="form-group">
+                    <label>文章属性</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="is_top" value="1"> 置顶</label>
+                        <label><input type="checkbox" name="is_recommend" value="1"> 推荐</label>
+                        <label><input type="checkbox" name="is_hot" value="1"> 热门</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="arc_rank">阅读权限</label>
+                    <select id="arc_rank" name="arc_rank">
+                        <option value="0">开放浏览</option>
+                        <option value="1">注册会员</option>
+                        <option value="10">VIP会员</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tags">标签</label>
+                    <input type="text" id="tags" name="tags" placeholder="多个标签用逗号分隔">
+                    <div class="help-text">用于文章分类和相关文章推荐</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="body">文章内容 *</label>
+                    <textarea id="body" name="body" class="editor" required placeholder="请输入文章内容"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">💾 保存文章</button>
+                    <a href="/aq3cms/article_list" class="btn btn-secondary">❌ 取消</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 文件上传预览
+        document.getElementById('litpic_upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // 可以在这里添加图片预览功能
+                    console.log('图片已选择:', file.name);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 表单验证
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const title = document.getElementById('title').value.trim();
+            const typeid = document.getElementById('typeid').value;
+            const body = document.getElementById('body').value.trim();
+
+            if (!title) {
+                alert('请输入文章标题');
+                e.preventDefault();
+                return;
+            }
+
+            if (!typeid) {
+                alert('请选择文章栏目');
+                e.preventDefault();
+                return;
+            }
+
+            if (!body) {
+                alert('请输入文章内容');
+                e.preventDefault();
+                return;
+            }
+        });
+    </script>
+</body>
+</html>

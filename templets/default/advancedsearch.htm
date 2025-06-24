@@ -1,0 +1,134 @@
+{aq3cms:include file='head.htm'/}
+
+<div class="container main-container">
+    <div class="row">
+        <!-- 主内容区 -->
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">高级搜索</h3>
+                </div>
+                <div class="panel-body">
+                    <!-- 高级搜索表单 -->
+                    <form action="/search" method="get" class="advanced-search-form">
+                        <div class="form-group">
+                            <label for="keyword">关键词</label>
+                            <input type="text" class="form-control" id="keyword" name="keyword" placeholder="请输入关键词">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="typeid">栏目</label>
+                            <select class="form-control" id="typeid" name="typeid">
+                                <option value="0">所有栏目</option>
+                                {aq3cms:channel type='top' row='20'}
+                                <option value="[field:id/]">[field:typename/]</option>
+                                {/aq3cms:channel}
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>时间范围</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="date" class="form-control" name="startdate" placeholder="开始日期">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="date" class="form-control" name="enddate" placeholder="结束日期">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>排序方式</label>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="orderby" value="pubdate" checked>
+                                    发布时间
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="orderby" value="click">
+                                    点击量
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="orderby" value="scores">
+                                    评分
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>搜索范围</label>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="searchtype[]" value="title" checked>
+                                    标题
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="searchtype[]" value="content">
+                                    内容
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="searchtype[]" value="writer">
+                                    作者
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="searchtype[]" value="source">
+                                    来源
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">搜索</button>
+                        <button type="reset" class="btn btn-default">重置</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 侧边栏 -->
+        <div class="col-md-4">
+            <!-- 热门搜索 -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">热门搜索</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="tag-cloud">
+                        {aq3cms:hotwords row=20}
+                        <a href="/search?keyword=[field:keyword/]" class="tag-item">[field:keyword/]</a>
+                        {/aq3cms:hotwords}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 热门文章 -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">热门文章</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="article-list">
+                        {aq3cms:arclist typeid=0 row=10 orderby=click}
+                        <li>
+                            <span class="pull-right text-muted">[field:click/]</span>
+                            <a href="[field:arcurl/]">[field:title/]</a>
+                        </li>
+                        {/aq3cms:arclist}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{aq3cms:include file='footer.htm'/}

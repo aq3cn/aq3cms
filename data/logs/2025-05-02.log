@@ -1,0 +1,4 @@
+2025/05/02 16:07:22 [INFO] database.go:49 数据库连接成功 type=mysql host=47.239.210.27
+2025/05/02 16:07:22 [ERROR] router.go:30 加载插件失败 error=mkdir : The system cannot find the path specified.
+2025/05/02 16:07:22 [INFO] main.go:88 服务器启动 地址=0.0.0.0:8087
+2025/05/02 16:07:29 [INFO] main.go:77 正在关闭服务器...

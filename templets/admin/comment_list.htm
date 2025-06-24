@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>评论列表 - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .search-form { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .search-form h3 { margin: 0 0 15px 0; color: #2c3e50; }
+        .form-row { display: flex; gap: 15px; align-items: end; flex-wrap: wrap; }
+        .form-group { flex: 1; min-width: 200px; }
+        .form-group label { display: block; margin-bottom: 5px; color: #2c3e50; font-weight: bold; }
+        .form-control { width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; transition: all 0.2s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-warning:hover { background: #e67e22; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-info:hover { background: #138496; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #5a6268; }
+        .comment-table { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden; }
+        .comment-table h3 { margin: 0; padding: 20px; border-bottom: 1px solid #eee; color: #2c3e50; }
+        .table { width: 100%; border-collapse: collapse; }
+        .table th, .table td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        .table th { background: #f8f9fa; font-weight: bold; color: #2c3e50; }
+        .table tr:hover { background: #f8f9fa; }
+        .comment-content { max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .comment-status { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+        .comment-status.pending { background: #fff3cd; color: #856404; }
+        .comment-status.approved { background: #d4edda; color: #155724; }
+        .comment-status.rejected { background: #f8d7da; color: #721c24; }
+        .action-buttons { display: flex; gap: 5px; }
+        .btn-sm { padding: 5px 10px; font-size: 12px; }
+        .table-footer { padding: 15px 20px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .pagination { display: flex; gap: 5px; align-items: center; }
+        .pagination a, .pagination span { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #3498db; }
+        .pagination .current { background: #3498db; color: white; border-color: #3498db; }
+        .empty-state { padding: 40px 20px; text-align: center; color: #666; }
+        .empty-state .icon { font-size: 64px; margin-bottom: 15px; opacity: 0.5; }
+        .checkbox { margin-right: 10px; }
+        @media (max-width: 768px) {
+            .form-row { flex-direction: column; }
+            .form-group { min-width: auto; }
+            .action-buttons { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📝 评论列表</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/">查看网站</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <a href="/aq3cms/comment">评论管理</a>
+            <span>></span>
+            <span>评论列表</span>
+        </div>
+
+        <div class="search-form">
+            <h3>🔍 搜索评论</h3>
+            <form method="GET" action="/aq3cms/comment_list">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="keyword">关键词</label>
+                        <input type="text" class="form-control" id="keyword" name="keyword"
+                               value="{{.Keyword}}" placeholder="用户名或评论内容">
+                    </div>
+                    <div class="form-group">
+                        <label for="ischeck">审核状态</label>
+                        <select class="form-control" id="ischeck" name="ischeck">
+                            <option value="">全部</option>
+                            <option value="0" {{if eq .IsCheck 0}}selected{{end}}>待审核</option>
+                            <option value="1" {{if eq .IsCheck 1}}selected{{end}}>已审核</option>
+                            <option value="-1" {{if eq .IsCheck -1}}selected{{end}}>已拒绝</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="pagesize">每页显示</label>
+                        <select class="form-control" id="pagesize" name="pagesize">
+                            <option value="20">20条</option>
+                            <option value="50">50条</option>
+                            <option value="100">100条</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">搜索</button>
+                        <a href="/aq3cms/comment_list" class="btn btn-secondary">重置</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="comment-table">
+            <h3>📝 评论列表</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th width="50">
+                            <input type="checkbox" id="selectAll" class="checkbox">
+                        </th>
+                        <th width="80">ID</th>
+                        <th width="120">用户名</th>
+                        <th>评论内容</th>
+                        <th width="100">IP地址</th>
+                        <th width="80">状态</th>
+                        <th width="150">评论时间</th>
+                        <th width="200">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{if .Comments}}
+                        {{range .Comments}}
+                        <tr>
+                            <td>
+                                <input type="checkbox" class="checkbox comment-checkbox" value="{{.ID}}">
+                            </td>
+                            <td>{{.ID}}</td>
+                            <td>{{.Username}}</td>
+                            <td>
+                                <div class="comment-content" title="{{.Content}}">{{.Content}}</div>
+                            </td>
+                            <td>{{.IP}}</td>
+                            <td>
+                                {{if eq .IsCheck 0}}
+                                    <span class="comment-status pending">待审核</span>
+                                {{else if eq .IsCheck 1}}
+                                    <span class="comment-status approved">已审核</span>
+                                {{else}}
+                                    <span class="comment-status rejected">已拒绝</span>
+                                {{end}}
+                            </td>
+                            <td>{{.Dtime.Format "2006-01-02 15:04"}}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="/aq3cms/comment_detail/{{.ID}}" class="btn btn-info btn-sm" title="查看详情">查看</a>
+                                    {{if eq .IsCheck 0}}
+                                        <a href="/aq3cms/comment_approve/{{.ID}}" class="btn btn-success btn-sm" title="审核通过">审核</a>
+                                        <a href="/aq3cms/comment_reject/{{.ID}}" class="btn btn-warning btn-sm" title="拒绝">拒绝</a>
+                                    {{end}}
+                                    <a href="/aq3cms/comment_delete/{{.ID}}" class="btn btn-danger btn-sm"
+                                       title="删除" onclick="return confirm('确定要删除这条评论吗？')">删除</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {{end}}
+                    {{else}}
+                        <tr>
+                            <td colspan="8">
+                                <div class="empty-state">
+                                    <div class="icon">💬</div>
+                                    <div>暂无评论数据</div>
+                                </div>
+                            </td>
+                        </tr>
+                    {{end}}
+                </tbody>
+            </table>
+
+            {{if .Comments}}
+            <div class="table-footer">
+                <div>
+                    <button type="button" class="btn btn-success btn-sm" onclick="batchApprove()">批量审核</button>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="batchDelete()">批量删除</button>
+                </div>
+                <div>
+                    {{if .Pagination}}
+                    <div class="pagination">
+                        {{if .Pagination.HasPrev}}
+                            <a href="?page={{.Pagination.PrevPage}}&keyword={{.Keyword}}&ischeck={{.IsCheck}}">上一页</a>
+                        {{end}}
+
+                        <span class="current">{{.Pagination.CurrentPage}} / {{.Pagination.TotalPages}}</span>
+
+                        {{if .Pagination.HasNext}}
+                            <a href="?page={{.Pagination.NextPage}}&keyword={{.Keyword}}&ischeck={{.IsCheck}}">下一页</a>
+                        {{end}}
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+            {{end}}
+        </div>
+    </div>
+
+    <script>
+        // 全选/取消全选
+        document.getElementById('selectAll').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.comment-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+
+        // 批量审核
+        function batchApprove() {
+            const selected = getSelectedIds();
+            if (selected.length === 0) {
+                alert('请选择要审核的评论');
+                return;
+            }
+
+            if (confirm(`确定要审核选中的 ${selected.length} 条评论吗？`)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/aq3cms/comment_batch_approve';
+
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'ids';
+                input.value = selected.join(',');
+                form.appendChild(input);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        // 批量删除
+        function batchDelete() {
+            const selected = getSelectedIds();
+            if (selected.length === 0) {
+                alert('请选择要删除的评论');
+                return;
+            }
+
+            if (confirm(`确定要删除选中的 ${selected.length} 条评论吗？此操作不可恢复！`)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/aq3cms/comment_batch_delete';
+
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'ids';
+                input.value = selected.join(',');
+                form.appendChild(input);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        // 获取选中的ID
+        function getSelectedIds() {
+            const checkboxes = document.querySelectorAll('.comment-checkbox:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+    </script>
+</body>
+</html>

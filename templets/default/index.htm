@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <meta name="keywords" content="{{.Keywords}}">
+    <meta name="description" content="{{.Description}}">
+    <style>
+        /* 参考 member_index.htm 的样式风格 */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .site-info { display: flex; align-items: center; gap: 15px; }
+        .header .site-info a { color: white; text-decoration: none; }
+        .header .site-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+
+        /* 统计卡片样式 */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+        .stat-card .icon { font-size: 48px; margin-bottom: 15px; }
+        .stat-card .number { font-size: 36px; font-weight: bold; margin-bottom: 10px; }
+        .stat-card .label { color: #666; font-size: 16px; }
+        .stat-card.articles { border-left: 4px solid #3498db; }
+        .stat-card.categories { border-left: 4px solid #27ae60; }
+        .stat-card.views { border-left: 4px solid #f39c12; }
+        .stat-card.comments { border-left: 4px solid #e74c3c; }
+        .stat-card.articles .number { color: #3498db; }
+        .stat-card.categories .number { color: #27ae60; }
+        .stat-card.views .number { color: #f39c12; }
+        .stat-card.comments .number { color: #e74c3c; }
+
+        /* 内容卡片样式 */
+        .content-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .content-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .content-card h3 { margin: 0 0 15px 0; color: #2c3e50; display: flex; align-items: center; gap: 10px; }
+        .content-card .description { color: #666; margin-bottom: 20px; line-height: 1.5; }
+        .content-card .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+        /* 按钮样式 */
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; transition: all 0.2s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-warning:hover { background: #e67e22; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-info:hover { background: #138496; }
+
+        /* 文章列表样式 */
+        .article-list { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .article-list h3 { margin: 0; padding: 20px; border-bottom: 1px solid #eee; color: #2c3e50; }
+        .article-list-content { padding: 20px; }
+        .article-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #f0f0f0; transition: background 0.2s; }
+        .article-item:hover { background: #f8f9fa; }
+        .article-item:last-child { border-bottom: none; }
+        .article-icon { width: 40px; height: 40px; border-radius: 50%; background: #3498db; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px; }
+        .article-info { flex: 1; }
+        .article-title { font-weight: bold; color: #2c3e50; margin-bottom: 5px; }
+        .article-meta { color: #666; font-size: 14px; }
+        .article-date { color: #999; font-size: 12px; }
+
+        /* 两列布局 */
+        .two-column { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .empty-state { padding: 40px 20px; text-align: center; color: #666; }
+        .empty-state .icon { font-size: 64px; margin-bottom: 15px; opacity: 0.5; }
+
+        /* 侧边栏样式 */
+        .sidebar-card { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .sidebar-card h3 { margin: 0; padding: 20px; border-bottom: 1px solid #eee; color: #2c3e50; }
+        .sidebar-card .content { padding: 20px; }
+
+        /* 标签云样式 */
+        .tag-cloud { padding: 0; }
+        .tag-item { display: inline-block; margin: 3px; padding: 5px 10px; background: #f8f9fa; color: #666; text-decoration: none; border-radius: 15px; font-size: 12px; transition: all 0.2s; }
+        .tag-item:hover { background: #3498db; color: #fff; text-decoration: none; }
+
+        /* 友情链接样式 */
+        .link-list { list-style: none; padding: 0; margin: 0; }
+        .link-list li { padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+        .link-list li:last-child { border-bottom: none; }
+        .link-list a { color: #666; text-decoration: none; transition: color 0.2s; }
+        .link-list a:hover { color: #3498db; }
+
+        /* 页脚样式 */
+        .footer { background: #2c3e50; color: white; padding: 30px 0; margin-top: 40px; }
+        .footer p { margin: 5px 0; }
+        .footer a { color: #3498db; }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .two-column { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .content-grid { grid-template-columns: 1fr; }
+            .header { flex-direction: column; gap: 10px; text-align: center; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>🏠 {{.SiteName}}</h1>
+        <div class="site-info">
+            <span>欢迎访问我们的网站</span>
+            <a href="/aq3cms/login">管理后台</a>
+            <a href="/search">搜索</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/">网站首页</a>
+            <span>></span>
+            <span>欢迎页面</span>
+        </div>
+
+        <!-- 网站统计信息 -->
+        <div class="stats-grid">
+            <div class="stat-card articles">
+                <div class="icon">📄</div>
+                <div class="number">{{.Stats.ArticleCount}}</div>
+                <div class="label">文章总数</div>
+            </div>
+            <div class="stat-card categories">
+                <div class="icon">📁</div>
+                <div class="number">{{.Stats.CategoryCount}}</div>
+                <div class="label">栏目数量</div>
+            </div>
+            <div class="stat-card views">
+                <div class="icon">👀</div>
+                <div class="number">{{.Stats.ViewCount}}</div>
+                <div class="label">总访问量</div>
+            </div>
+            <div class="stat-card comments">
+                <div class="icon">💬</div>
+                <div class="number">{{.Stats.CommentCount}}</div>
+                <div class="label">评论数量</div>
+            </div>
+        </div>
+
+        <!-- 功能导航卡片 -->
+        <div class="content-grid">
+            <div class="content-card">
+                <h3>📰 新闻资讯</h3>
+                <div class="description">
+                    查看最新的新闻资讯，了解行业动态和公司最新消息。
+                </div>
+                <div class="actions">
+                    <a href="/news" class="btn btn-primary">查看新闻</a>
+                    <a href="/news/latest" class="btn btn-info">最新资讯</a>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>🛍️ 产品展示</h3>
+                <div class="description">
+                    浏览我们的产品目录，了解产品特性和技术规格。
+                </div>
+                <div class="actions">
+                    <a href="/products" class="btn btn-success">产品目录</a>
+                    <a href="/products/featured" class="btn btn-warning">推荐产品</a>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>📚 文档中心</h3>
+                <div class="description">
+                    查看使用文档、开发指南和常见问题解答。
+                </div>
+                <div class="actions">
+                    <a href="/docs" class="btn btn-info">使用文档</a>
+                    <a href="/docs/api" class="btn btn-primary">API文档</a>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>🤝 关于我们</h3>
+                <div class="description">
+                    了解我们的公司历史、团队成员和联系方式。
+                </div>
+                <div class="actions">
+                    <a href="/about" class="btn btn-primary">公司介绍</a>
+                    <a href="/contact" class="btn btn-success">联系我们</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 两列布局：最新文章和侧边栏 -->
+        <div class="two-column">
+            <div class="article-list">
+                <h3>📰 最新文章</h3>
+                <div class="article-list-content">
+                    {aq3cms:arclist typeid=0 row=8 orderby=pubdate}
+                    <div class="article-item">
+                        <div class="article-icon">📄</div>
+                        <div class="article-info">
+                            <div class="article-title">
+                                <a href="[field:arcurl/]">[field:title/]</a>
+                            </div>
+                            <div class="article-meta">栏目：[field:typename/] • 作者：[field:writer/]</div>
+                        </div>
+                        <div class="article-date">[field:pubdate function="MyDate('Y-m-d',@me)"/]</div>
+                    </div>
+                    {/aq3cms:arclist}
+                    <!-- 默认文章列表 -->
+                    <div class="article-item">
+                        <div class="article-icon">📄</div>
+                        <div class="article-info">
+                            <div class="article-title">
+                                <a href="/article/1.html">aq3cms 内容管理系统正式发布</a>
+                            </div>
+                            <div class="article-meta">栏目：系统公告 • 作者：管理员</div>
+                        </div>
+                        <div class="article-date">{{substr .CurrentTime 0 10}}</div>
+                    </div>
+                    <div class="article-item">
+                        <div class="article-icon">📄</div>
+                        <div class="article-info">
+                            <div class="article-title">
+                                <a href="/article/2.html">如何使用 aq3cms 创建网站</a>
+                            </div>
+                            <div class="article-meta">栏目：使用教程 • 作者：技术团队</div>
+                        </div>
+                        <div class="article-date">{{substr .CurrentTime 0 10}}</div>
+                    </div>
+                    <div class="article-item">
+                        <div class="article-icon">📄</div>
+                        <div class="article-info">
+                            <div class="article-title">
+                                <a href="/article/3.html">aq3cms 模板开发指南</a>
+                            </div>
+                            <div class="article-meta">栏目：开发文档 • 作者：开发者</div>
+                        </div>
+                        <div class="article-date">{{substr .CurrentTime 0 10}}</div>
+                    </div>
+                    <div class="article-item">
+                        <div class="article-icon">📄</div>
+                        <div class="article-info">
+                            <div class="article-title">
+                                <a href="/article/4.html">aq3cms 插件系统介绍</a>
+                            </div>
+                            <div class="article-meta">栏目：功能介绍 • 作者：产品经理</div>
+                        </div>
+                        <div class="article-date">{{substr .CurrentTime 0 10}}</div>
+                    </div>
+                    <div class="article-item">
+                        <div class="article-icon">📄</div>
+                        <div class="article-info">
+                            <div class="article-title">
+                                <a href="/article/5.html">aq3cms 性能优化技巧</a>
+                            </div>
+                            <div class="article-meta">栏目：技术分享 • 作者：架构师</div>
+                        </div>
+                        <div class="article-date">{{substr .CurrentTime 0 10}}</div>
+                    </div>
+                </div>
+                <div style="padding: 15px 20px; border-top: 1px solid #eee; text-align: center;">
+                    <a href="/articles" class="btn btn-primary">查看全部文章</a>
+                </div>
+            </div>
+
+            <!-- 侧边栏 -->
+            <div>
+                <!-- 热门文章 -->
+                <div class="sidebar-card">
+                    <h3>🔥 热门文章</h3>
+                    <div class="content">
+                        {aq3cms:arclist typeid=0 row=5 orderby=click}
+                        <div class="article-item">
+                            <div class="article-icon">🔥</div>
+                            <div class="article-info">
+                                <div class="article-title">
+                                    <a href="[field:arcurl/]">[field:title/]</a>
+                                </div>
+                                <div class="article-meta">点击量：[field:click/]</div>
+                            </div>
+                        </div>
+                        {/aq3cms:arclist}
+                        <!-- 默认热门文章 -->
+                        <div class="article-item">
+                            <div class="article-icon">🔥</div>
+                            <div class="article-info">
+                                <div class="article-title">
+                                    <a href="/article/1.html">aq3cms 安装配置指南</a>
+                                </div>
+                                <div class="article-meta">点击量：1256</div>
+                            </div>
+                        </div>
+                        <div class="article-item">
+                            <div class="article-icon">🔥</div>
+                            <div class="article-info">
+                                <div class="article-title">
+                                    <a href="/article/2.html">模板开发入门教程</a>
+                                </div>
+                                <div class="article-meta">点击量：998</div>
+                            </div>
+                        </div>
+                        <div class="article-item">
+                            <div class="article-icon">🔥</div>
+                            <div class="article-info">
+                                <div class="article-title">
+                                    <a href="/article/3.html">插件开发指南</a>
+                                </div>
+                                <div class="article-meta">点击量：856</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 系统信息 -->
+                <div class="sidebar-card">
+                    <h3>ℹ️ 系统信息</h3>
+                    <div class="content">
+                        <p><strong>站点名称：</strong>{{.SiteName}}</p>
+                        <p><strong>系统版本：</strong>{{.Version}}</p>
+                        <p><strong>当前时间：</strong>{{.CurrentTime}}</p>
+                        <p><strong>运行环境：</strong>Go {{.Version}}</p>
+                        <hr>
+                        <p><a href="/aq3cms/login" class="btn btn-primary">进入后台</a></p>
+                    </div>
+                </div>
+
+                <!-- 标签云 -->
+                <div class="sidebar-card">
+                    <h3>🏷️ 标签云</h3>
+                    <div class="content">
+                        <div class="tag-cloud">
+                            {aq3cms:tag row=20 sort=new}
+                            <a href="[field:link/]" class="tag-item">[field:tag/]</a>
+                            {/aq3cms:tag}
+                            <!-- 默认标签 -->
+                            <a href="/tag/aq3cms" class="tag-item">aq3cms</a>
+                            <a href="/tag/golang" class="tag-item">Golang</a>
+                            <a href="/tag/cms" class="tag-item">CMS</a>
+                            <a href="/tag/web" class="tag-item">Web开发</a>
+                            <a href="/tag/template" class="tag-item">模板</a>
+                            <a href="/tag/plugin" class="tag-item">插件</a>
+                            <a href="/tag/performance" class="tag-item">性能</a>
+                            <a href="/tag/security" class="tag-item">安全</a>
+                            <a href="/tag/database" class="tag-item">数据库</a>
+                            <a href="/tag/cache" class="tag-item">缓存</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 友情链接 -->
+                <div class="sidebar-card">
+                    <h3>🔗 友情链接</h3>
+                    <div class="content">
+                        <ul class="link-list">
+                            {aq3cms:flink row=8}
+                            <li><a href="[field:url/]" target="_blank">[field:webname/]</a></li>
+                            {/aq3cms:flink}
+                            <!-- 默认友情链接 -->
+                            <li><a href="https://golang.org" target="_blank">Go 官方网站</a></li>
+                            <li><a href="https://github.com" target="_blank">GitHub</a></li>
+                            <li><a href="https://getbootstrap.com" target="_blank">Bootstrap</a></li>
+                            <li><a href="https://jquery.com" target="_blank">jQuery</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <p>{{.CopyRight}}</p>
+                    <p>站点地址: <a href="{{.SiteURL}}">{{.SiteURL}}</a></p>
+                </div>
+                <div style="text-align: right;">
+                    <p>Powered by <a href="/">aq3cms</a> | Go 语言驱动</p>
+                    <p>系统版本: {{.Version}} | 当前时间: {{.CurrentTime}}</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

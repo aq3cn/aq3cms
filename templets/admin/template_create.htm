@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新建模板 - aq3cms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .user-info { display: flex; align-items: center; gap: 15px; }
+        .header .user-info a { color: white; text-decoration: none; }
+        .header .user-info a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .breadcrumb { background: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb span { color: #666; margin: 0 8px; }
+        .form-container { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .form-header { padding: 20px; border-bottom: 1px solid #eee; }
+        .form-header h3 { margin: 0; color: #2c3e50; }
+        .form-content { padding: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #2c3e50; }
+        .form-control { width: 100%; padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        .form-control:focus { outline: none; border-color: #3498db; box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2); }
+        .form-select { width: 100%; padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; background: white; }
+        .form-textarea { width: 100%; min-height: 400px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.5; resize: vertical; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; transition: all 0.2s; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-warning:hover { background: #e67e22; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-info:hover { background: #138496; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #5a6268; }
+        .form-footer { padding: 20px; border-top: 1px solid #eee; background: #f8f9fa; display: flex; justify-content: space-between; align-items: center; }
+        .form-actions { display: flex; gap: 10px; }
+        .templates-panel { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .templates-header { padding: 20px; border-bottom: 1px solid #eee; }
+        .templates-header h4 { margin: 0; color: #2c3e50; }
+        .templates-content { padding: 20px; }
+        .template-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+        .template-btn { padding: 10px 15px; border: 1px solid #ddd; border-radius: 5px; background: white; cursor: pointer; text-align: center; transition: all 0.2s; }
+        .template-btn:hover { background: #f8f9fa; border-color: #3498db; }
+        .template-btn.active { background: #3498db; color: white; border-color: #3498db; }
+        .help-text { color: #666; font-size: 14px; margin-top: 5px; }
+        @media (max-width: 768px) {
+            .form-footer { flex-direction: column; gap: 15px; align-items: stretch; }
+            .form-actions { justify-content: center; }
+            .template-buttons { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📄 新建模板</h1>
+        <div class="user-info">
+            <span>欢迎，{{.AdminName}}</span>
+            <a href="/aq3cms/">返回首页</a>
+            <a href="/">查看网站</a>
+            <a href="/aq3cms/logout">退出登录</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/aq3cms/">管理首页</a>
+            <span>></span>
+            <a href="/aq3cms/template">模板管理</a>
+            <span>></span>
+            <a href="/aq3cms/template_list">模板列表</a>
+            <span>></span>
+            <span>新建模板</span>
+        </div>
+
+        <div class="templates-panel">
+            <div class="templates-header">
+                <h4>📋 模板类型</h4>
+            </div>
+            <div class="templates-content">
+                <div class="template-buttons">
+                    <div class="template-btn" onclick="selectTemplate('html')">
+                        <div style="font-size: 24px; margin-bottom: 5px;">🌐</div>
+                        <div>HTML模板</div>
+                    </div>
+                    <div class="template-btn" onclick="selectTemplate('css')">
+                        <div style="font-size: 24px; margin-bottom: 5px;">🎨</div>
+                        <div>CSS样式</div>
+                    </div>
+                    <div class="template-btn" onclick="selectTemplate('js')">
+                        <div style="font-size: 24px; margin-bottom: 5px;">⚡</div>
+                        <div>JavaScript</div>
+                    </div>
+                    <div class="template-btn" onclick="selectTemplate('directory')">
+                        <div style="font-size: 24px; margin-bottom: 5px;">📁</div>
+                        <div>新建目录</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form id="createForm" method="POST" action="/aq3cms/template_create">
+            <input type="hidden" name="current_dir" value="{{.CurrentDir}}">
+            <input type="hidden" name="file_type" id="fileType" value="html">
+            
+            <div class="form-container">
+                <div class="form-header">
+                    <h3>📝 文件信息</h3>
+                </div>
+                
+                <div class="form-content">
+                    <div class="form-group">
+                        <label for="fileName">文件名</label>
+                        <input type="text" name="file_name" id="fileName" class="form-control" placeholder="请输入文件名" required>
+                        <div class="help-text">文件名不需要包含扩展名，系统会自动添加</div>
+                    </div>
+
+                    <div class="form-group" id="contentGroup">
+                        <label for="content">文件内容</label>
+                        <textarea name="content" id="content" class="form-textarea" placeholder="请输入文件内容..."></textarea>
+                        <div class="help-text">支持HTML、CSS、JavaScript等代码</div>
+                    </div>
+                </div>
+                
+                <div class="form-footer">
+                    <div>
+                        <span style="color: #666;">当前目录: {{.CurrentDir}}</span>
+                    </div>
+                    <div class="form-actions">
+                        <a href="/aq3cms/template_list?dir={{.CurrentDir}}" class="btn btn-secondary">❌ 取消</a>
+                        <button type="button" class="btn btn-info" onclick="insertTemplate()">📋 插入模板</button>
+                        <button type="submit" class="btn btn-success">💾 创建文件</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let currentTemplate = 'html';
+
+        // 选择模板类型
+        function selectTemplate(type) {
+            currentTemplate = type;
+            document.getElementById('fileType').value = type;
+            
+            // 更新按钮状态
+            document.querySelectorAll('.template-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.template-btn').classList.add('active');
+            
+            // 更新表单
+            const contentGroup = document.getElementById('contentGroup');
+            const fileName = document.getElementById('fileName');
+            
+            if (type === 'directory') {
+                contentGroup.style.display = 'none';
+                fileName.placeholder = '请输入目录名';
+            } else {
+                contentGroup.style.display = 'block';
+                fileName.placeholder = '请输入文件名';
+                
+                // 设置默认内容
+                const content = document.getElementById('content');
+                switch (type) {
+                    case 'html':
+                        content.value = getHtmlTemplate();
+                        break;
+                    case 'css':
+                        content.value = getCssTemplate();
+                        break;
+                    case 'js':
+                        content.value = getJsTemplate();
+                        break;
+                }
+            }
+        }
+
+        // 获取HTML模板
+        function getHtmlTemplate() {
+            return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+</head>
+<body>
+    <h1>{{.Title}}</h1>
+    <p>这是一个新的HTML模板</p>
+</body>
+</html>`;
+        }
+
+        // 获取CSS模板
+        function getCssTemplate() {
+            return `/* CSS样式文件 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #f5f5f5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}`;
+        }
+
+        // 获取JS模板
+        function getJsTemplate() {
+            return `// JavaScript文件
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('页面加载完成');
+    
+    // 在这里添加你的JavaScript代码
+});`;
+        }
+
+        // 插入模板
+        function insertTemplate() {
+            const templates = {
+                'aq3cmsCMS标签': '{aq3cms:arclist typeid="1" limit="10"}\\n    <a href="{{.url}}">{{.title}}</a>\\n{/aq3cms:arclist}',
+                '条件判断': '{{if .Condition}}\\n    <!-- 条件为真时显示 -->\\n{{else}}\\n    <!-- 条件为假时显示 -->\\n{{end}}',
+                '循环遍历': '{{range .Items}}\\n    <div>{{.}}</div>\\n{{end}}',
+                '包含模板': '{{template "header.htm" .}}\\n<!-- 页面内容 -->\\n{{template "footer.htm" .}}'
+            };
+            
+            const templateName = prompt('选择要插入的模板:\\n' + Object.keys(templates).map((k, i) => `${i+1}. ${k}`).join('\\n'));
+            
+            if (templateName && templates[templateName]) {
+                const content = document.getElementById('content');
+                const start = content.selectionStart;
+                const end = content.selectionEnd;
+                const value = content.value;
+                
+                content.value = value.substring(0, start) + templates[templateName] + value.substring(end);
+                content.focus();
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            selectTemplate('html');
+            
+            // 表单提交处理
+            document.getElementById('createForm').addEventListener('submit', function(e) {
+                const fileName = document.getElementById('fileName').value.trim();
+                if (!fileName) {
+                    alert('请输入文件名');
+                    e.preventDefault();
+                    return;
+                }
+                
+                if (currentTemplate === 'directory') {
+                    if (!confirm('确定要创建目录 "' + fileName + '" 吗？')) {
+                        e.preventDefault();
+                    }
+                } else {
+                    if (!confirm('确定要创建文件 "' + fileName + '" 吗？')) {
+                        e.preventDefault();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
